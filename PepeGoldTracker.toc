@@ -1,4 +1,4 @@
-## Interface: 90005
+## Interface: 30400
 ## Title: PepeGoldTracker |TInterface\Addons\PepeGoldTracker\media\PepeAlone:0|t
 ## Notes: Addon that help tracking gold stored accross your account
 ## Notes-frFR: Un addon utilitaire vous permettant de suivre facilement l'or présent sur votre compte

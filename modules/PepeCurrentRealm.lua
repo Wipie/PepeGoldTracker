@@ -36,7 +36,7 @@ function PepeCurrentRealm:DrawCurrentRealmWindow()
     currentRealmWindow:SetPoint('CENTER', UIParent, 'CENTER', 0, 420)
     currentRealmWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
 
-    currentRealmWindow:SetResizeBounds(250, 332)
+    currentRealmWindow:SetMinResize(250, 332)
     currentRealmWindow:IsUserPlaced(true);
 
 

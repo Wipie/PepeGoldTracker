@@ -72,8 +72,9 @@ function PepeGoldTracker:OnEnable()
     self:RegisterEvent("PLAYER_MONEY", "OnEvent")
 
     -- Guild related event
-    self:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", "OnBankEvent")
+    self:RegisterEvent("GUILDBANKFRAME_OPENED", "OnEvent")
     self:RegisterEvent("GUILDBANK_UPDATE_MONEY", "OnEvent")
+    self:RegisterEvent("GUILDBANKFRAME_CLOSED", "OnEvent")
 end
 
 function PepeGoldTracker:MigrateOldDatabaseSchema()
@@ -318,23 +319,11 @@ function PepeGoldTracker:OnEvent(event)
         else
             PepeGoldTracker:RegisterChar()
         end
-    elseif (event == 'GUILDBANKFRAME_CLOSED') then
+    elseif ((event == 'GUILDBANKFRAME_OPENED') or (event == 'GUILDBANK_UPDATE_MONEY') or (event == 'GUILDBANKFRAME_CLOSED')) then
         if (PepeGoldTracker:CheckIfGuildExist()) then 
             PepeGoldTracker:UpdateGuild()
         else
             PepeGoldTracker:RegisterGuild()
-        end
-    end
-end
-
-function PepeGoldTracker:OnBankEvent(event, arg)
-    if ((event == 'PLAYER_INTERACTION_MANAGER_FRAME_SHOW') or (event == 'PLAYER_INTERACTION_MANAGER_FRAME_HIDE')) then
-        if (arg == 10) then
-            if (PepeGoldTracker:CheckIfGuildExist()) then 
-                PepeGoldTracker:UpdateGuild()
-            else
-                PepeGoldTracker:RegisterGuild()
-            end
         end
     end
 end

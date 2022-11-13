@@ -60,7 +60,7 @@ function PepeCharacterViewer:DrawWindow()
 
     StdUi:MakeResizable(characterWindow, "BOTTOMRIGHT")
     StdUi:MakeResizable(characterWindow, "TOPLEFT")
-    characterWindow:SetResizeBounds(950, 250)
+    characterWindow:SetMinResize(950, 250)
     characterWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
     characterWindow:SetScript("OnMouseDown", function(self)
         self:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())

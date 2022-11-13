@@ -60,7 +60,7 @@ function OblvionGuildsViewer:DrawWindow()
 
     StdUi:MakeResizable(guildWindow, "BOTTOMRIGHT")
     StdUi:MakeResizable(guildWindow, "TOPLEFT")
-    guildWindow:SetResizeBounds(950, 250)
+    guildWindow:SetMinResize(950, 250)
     guildWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
     guildWindow:SetScript("OnMouseDown", function(self)
         self:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
