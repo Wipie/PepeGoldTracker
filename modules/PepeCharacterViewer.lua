@@ -35,7 +35,7 @@ function PepeCharacterViewer:DrawWindow()
     if (self.configDB.characterWindowSize ~= nil) then
         characterWindow = StdUi:Window(UIParent, self.configDB.characterWindowSize.width, self.configDB.characterWindowSize.height, L["Character tracking"])
     else
-        characterWindow = StdUi:Window(UIParent, 900, 700, L["Character tracking"])
+        characterWindow = StdUi:Window(UIParent, 950, 700, L["Character tracking"])
     end
 
     if (self.configDB.characterWindowPosition ~= nil) then
@@ -277,7 +277,7 @@ end
 function PepeCharacterViewer:DrawConfirmationWindow()
     local buttons = {
         yes = {
-            text = L["Yes"],
+            text = "Yes",
             onClick = function(b)
                 local db = PepeGoldTracker.db.global.characters
                 table.remove(db, self.id)
@@ -288,7 +288,7 @@ function PepeCharacterViewer:DrawConfirmationWindow()
             end
         },
         no = {
-            text = L["No"],
+            text = "No",
             onClick = function(b)
                 b.window:Hide()
                 PepeCharacterViewer:Toggle()

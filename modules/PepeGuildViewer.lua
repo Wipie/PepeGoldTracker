@@ -35,7 +35,7 @@ function OblvionGuildsViewer:DrawWindow()
     if (self.configDB.guildWindowSize ~= nil) then
         guildWindow = StdUi:Window(UIParent, self.configDB.guildWindowSize.width, self.configDB.guildWindowSize.height, L["Guild tracking"])
     else
-        guildWindow = StdUi:Window(UIParent, 900, 700, L["Guild tracking"])
+        guildWindow = StdUi:Window(UIParent, 950, 700, L["Guild tracking"])
     end
 
     if (self.configDB.guildWindowPosition ~= nil) then
