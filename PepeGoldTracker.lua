@@ -346,7 +346,7 @@ end
 
 function PepeGoldTracker:OnBankEvent(event, arg)
     if ((event == 'PLAYER_INTERACTION_MANAGER_FRAME_SHOW') or (event == 'PLAYER_INTERACTION_MANAGER_FRAME_HIDE')) then
-        if (arg == 10) then
+        if (arg == 10) then -- 10 == GuildBank
             if (PepeGoldTracker:CheckIfGuildExist()) then 
                 PepeGoldTracker:UpdateGuild()
             else
