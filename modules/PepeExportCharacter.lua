@@ -3,6 +3,11 @@ local PepeExportCharacter = PepeGoldTracker:NewModule("PepeExportCharacter", "Ac
 local StdUi = LibStub('StdUi')
 local L = LibStub("AceLocale-3.0"):GetLocale("PepeGoldTracker")
 
+PepeExportCharacter.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
+PepeExportCharacter.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
+PepeExportCharacter.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+PepeExportCharacter.IsWrath = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_WRATH_CLASSIC
+
 function PepeExportCharacter:OnEnable()
     self.configDB = PepeGoldTracker.db.char
 end
@@ -36,7 +41,11 @@ function PepeExportCharacter:DrawExportCharWindow()
     end)
 
     StdUi:MakeResizable(exportCharWindow, "BOTTOMRIGHT")
-    exportCharWindow:SetResizeBounds(250, 332)
+    if (self.IsRetail) then
+        exportCharWindow:SetResizeBounds(250, 332)
+    else
+        exportCharWindow:SetMinResize(250, 332)
+    end
     exportCharWindow:IsUserPlaced(true);
 
     local editBox = StdUi:MultiLineBox(exportCharWindow, 280, 300, nil)

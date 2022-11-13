@@ -3,6 +3,11 @@ local PepeCurrentRealm = PepeGoldTracker:NewModule("PepeCurrentRealm", "AceConso
 local StdUi = LibStub('StdUi')
 local L = LibStub("AceLocale-3.0"):GetLocale("PepeGoldTracker")
 
+PepeCurrentRealm.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
+PepeCurrentRealm.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
+PepeCurrentRealm.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+PepeCurrentRealm.IsWrath = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_WRATH_CLASSIC
+
 function PepeCurrentRealm:OnEnable()
     self.configDB = PepeGoldTracker.db.char
 end
@@ -36,7 +41,11 @@ function PepeCurrentRealm:DrawCurrentRealmWindow()
     currentRealmWindow:SetPoint('CENTER', UIParent, 'CENTER', 0, 420)
     currentRealmWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
 
-    currentRealmWindow:SetResizeBounds(250, 332)
+    if (self.IsRetail) then
+        currentRealmWindow:SetResizeBounds(250, 332)
+    else
+        currentRealmWindow:SetMinResize(250, 332)
+    end
     currentRealmWindow:IsUserPlaced(true);
 
 

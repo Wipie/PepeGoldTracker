@@ -3,6 +3,11 @@ local OblvionGuildsViewer = PepeGoldTracker:NewModule("PepeGuildViewer", "AceEve
 local StdUi = LibStub("StdUi")
 local L = LibStub("AceLocale-3.0"):GetLocale("PepeGoldTracker")
 
+OblvionGuildsViewer.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
+OblvionGuildsViewer.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
+OblvionGuildsViewer.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+OblvionGuildsViewer.IsWrath = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_WRATH_CLASSIC
+
 function OblvionGuildsViewer:OnEnable()
     self.configDB = PepeGoldTracker.db.char
     self:RegisterEvent("GUILDBANK_UPDATE_MONEY", "OnEvent")
@@ -60,7 +65,11 @@ function OblvionGuildsViewer:DrawWindow()
 
     StdUi:MakeResizable(guildWindow, "BOTTOMRIGHT")
     StdUi:MakeResizable(guildWindow, "TOPLEFT")
-    guildWindow:SetResizeBounds(950, 250)
+    if (self.IsRetail) then
+        guildWindow:SetResizeBounds(950, 250)
+    else 
+        guildWindow:SetMinResize(950, 250)
+    end
     guildWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
     guildWindow:SetScript("OnMouseDown", function(self)
         self:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())

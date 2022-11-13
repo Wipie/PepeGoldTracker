@@ -4,6 +4,12 @@ local StdUi = LibStub('StdUi')
 local ldbi = LibStub("LibDBIcon-1.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("PepeGoldTracker")
 
+
+PepeGoldTracker.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
+PepeGoldTracker.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
+PepeGoldTracker.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+PepeGoldTracker.IsWrath = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_WRATH_CLASSIC
+
 PepeGoldTracker.color = {
     orange = '|cffd4af37',
     red = '|cffDC143C',
@@ -72,7 +78,12 @@ function PepeGoldTracker:OnEnable()
     self:RegisterEvent("PLAYER_MONEY", "OnEvent")
 
     -- Guild related event
-    self:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", "OnBankEvent")
+    if (self.IsRetail) then
+        self:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", "OnBankEvent")
+    elseif (self.IsWrath) then
+        self:RegisterEvent("GUILDBANKFRAME_OPENED", "OnEvent")
+        self:RegisterEvent("GUILDBANKFRAME_CLOSED", "OnEvent")
+    end
     self:RegisterEvent("GUILDBANK_UPDATE_MONEY", "OnEvent")
 end
 
@@ -318,7 +329,13 @@ function PepeGoldTracker:OnEvent(event)
         else
             PepeGoldTracker:RegisterChar()
         end
-    elseif (event == 'GUILDBANKFRAME_CLOSED') then
+    elseif (self.IsWrath and ((event == 'GUILDBANKFRAME_OPENED') or (event == 'GUILDBANKFRAME_CLOSED'))) then
+        if (PepeGoldTracker:CheckIfGuildExist()) then 
+            PepeGoldTracker:UpdateGuild()
+        else
+            PepeGoldTracker:RegisterGuild()
+        end       
+    elseif (event == 'GUILDBANK_UPDATE_MONEY') then
         if (PepeGoldTracker:CheckIfGuildExist()) then 
             PepeGoldTracker:UpdateGuild()
         else

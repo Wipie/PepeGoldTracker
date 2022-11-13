@@ -3,6 +3,11 @@ local PepeCharacterViewer = PepeGoldTracker:NewModule("PepeCharacterViewer", "Ac
 local StdUi = LibStub("StdUi")
 local L = LibStub("AceLocale-3.0"):GetLocale("PepeGoldTracker")
 
+PepeCharacterViewer.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
+PepeCharacterViewer.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
+PepeCharacterViewer.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+PepeCharacterViewer.IsWrath = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_WRATH_CLASSIC
+
 function PepeCharacterViewer:OnEnable()
     self.configDB = PepeGoldTracker.db.char
     self:RegisterEvent("PLAYER_MONEY", "OnEvent")
@@ -60,7 +65,11 @@ function PepeCharacterViewer:DrawWindow()
 
     StdUi:MakeResizable(characterWindow, "BOTTOMRIGHT")
     StdUi:MakeResizable(characterWindow, "TOPLEFT")
-    characterWindow:SetResizeBounds(950, 250)
+    if (self.IsRetail) then
+        characterWindow:SetResizeBounds(950, 250)
+    else 
+        characterWindow:SetMinResize(950, 250)
+    end
     characterWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
     characterWindow:SetScript("OnMouseDown", function(self)
         self:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())

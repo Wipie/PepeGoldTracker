@@ -3,6 +3,11 @@ local PepeExportGuild = PepeGoldTracker:NewModule("PepeExportGuild", "AceConsole
 local StdUi = LibStub('StdUi')
 local L = LibStub("AceLocale-3.0"):GetLocale("PepeGoldTracker")
 
+PepeExportGuild.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
+PepeExportGuild.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
+PepeExportGuild.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+PepeExportGuild.IsWrath = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_WRATH_CLASSIC
+
 function PepeExportGuild:OnEnable()
     self.configDB = PepeGoldTracker.db.char
     self.db = PepeGoldTracker.db.global.guilds
@@ -36,7 +41,11 @@ function PepeExportGuild:DrawExportGuildWindow()
     end)
 
     StdUi:MakeResizable(exportGuildWindow, "BOTTOMRIGHT")
-    exportGuildWindow:SetResizeBounds(250, 332)
+    if (self.IsRetail) then
+        exportGuildWindow:SetResizeBounds(250, 332)
+    else
+        exportGuildWindow:SetMinResize(250, 332)
+    end
     exportGuildWindow:IsUserPlaced(true);
 
     local editBox = StdUi:MultiLineBox(exportGuildWindow, 280, 300, nil)
