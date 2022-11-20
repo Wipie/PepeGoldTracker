@@ -61,7 +61,7 @@ L["Connected realm:"] = true
 --[[
     Guild Viewer Window
 ]]
-L["Guild tracking"] = true
+L["Guilds overview"] = true
 L["Purge DB"] = true
 L["Clear the guild database.\nThis effect is permanent and cannot be undone."] = true
 L["Only show guilds that are on this realm."] = true
@@ -86,7 +86,7 @@ L["Export characters data"] = true
 --[[
     Character Viewer Window
 ]]
-L["Character tracking"] = true
+L["Characters overview"] = true
 L["Only show characters that are on this realm."] = true
 L["Character name"] = true
 L["Character "] = true
