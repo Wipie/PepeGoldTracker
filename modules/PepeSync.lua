@@ -88,10 +88,8 @@ function PepeSync:OnSync(event, ...)
             self.syncProgressWindow.statusText:SetText("Synching: "..character[1].. " ("..character[7].."/"..character[8]..")")
         end
         if (PepeGoldTracker:CheckIfCharExist(character[1])) then
-            print("Update")
             PepeGoldTracker:UpdateCharFromSync(character)
         else
-            print("Register")
             PepeGoldTracker:RegisterCharFromSync(character)
         end
     end

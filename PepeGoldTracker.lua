@@ -46,6 +46,7 @@ function SlashCmdList.pgt(command)
         print("   " .. PepeGoldTracker.color.orange .. " guild "..PepeGoldTracker.color.reset ..L["- open guild window"])
         print("   " .. PepeGoldTracker.color.orange .. " version "..PepeGoldTracker.color.reset ..L["- print the version number of the addon."])
         print("   " .. PepeGoldTracker.color.orange .. " realm "..PepeGoldTracker.color.reset ..L["- open a window showing what realm you are logged on."])
+        print("   " .. PepeGoldTracker.color.orange .. " options "..PepeGoldTracker.color.reset ..L["- open the options window."])
         print("   " .. PepeGoldTracker.color.orange .. " minimap "..PepeGoldTracker.color.reset ..L["- toggle visibility of minimap button"])
     end
 end
@@ -69,7 +70,6 @@ function PepeGoldTracker:OnInitialize()
     end
 
     PepeGoldTracker:SetupOptions() -- Options Page
-    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", "PepeGoldTracker")
 
     print(PepeGoldTracker.color.orange .."PepeGoldTracker "..GetAddOnMetadata("PepeGoldTracker", "Version")..L[" initializated successfully"])
 end
@@ -132,9 +132,6 @@ function PepeGoldTracker:DrawMinimapButton()
                 { text = L["Toggle realm window"], notCheckable = true, func = function()
                     PepeGoldTracker.currentRealm:Toggle()
                 end },
-                { text = L["Toggle sync window"], notCheckable = true, func = function()
-                    PepeGoldTracker.syncModule:Toggle()
-                end },
             }
             EasyMenu(menu, self.menuFrame, "cursor", 0, 0, "MENU");
         end,
@@ -152,69 +149,87 @@ end
 function PepeGoldTracker:SetupOptions()
     self.options = {
         name = "PepeGoldTracker",
-        descStyle = "inline",
         type = "group",
-        childGroups = "tab",
         args = {
-            desc = {
-                type = "description",
-                name = L["Addon that help tracking gold stored accross your account"],
-                fontSize = "medium",
-                order = 1
+            general = {
+                type = "group",
+                name = "PepeGoldTracker",
+                args = {
+                    desc = {
+                        type = "description",
+                        name = L["Addon that help tracking gold stored accross your account"],
+                        fontSize = "medium",
+                        order = 1
+                    },
+                    author = {
+                        type = "description",
+                        name = PepeGoldTracker.color.lightorange..L["Author: "]..PepeGoldTracker.color.reset..GetAddOnMetadata("PepeGoldTracker", "Author") .. "\n",
+                        order = 2
+                    },
+                    version = {
+                        type = "description",
+                        name = PepeGoldTracker.color.lightorange..L["Version: "]..PepeGoldTracker.color.reset..GetAddOnMetadata("PepeGoldTracker", "Version") .. "\n",
+                        order = 3
+                    },
+                    hideminimap = {
+                        name = L["Show minimap icon"],
+                        desc = PepeGoldTracker.color.gray..L["Whether or not to show the minimap icon."]..PepeGoldTracker.color.reset,
+                        descStyle = "inline",
+                        width = "full",
+                        type = "toggle",
+                        order = 4,
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.minimap.hide = not val
+                            ldbi:Refresh("PepeGTMinimapButton", PepeGoldTracker.db.global.minimap)
+                        end,
+                        get = function(info)
+                            return not PepeGoldTracker.db.global.minimap.hide
+                        end
+                    },
+                    turnOffCurrentRealmWindow = {
+                        name = L["Show current realm window"],
+                        desc = PepeGoldTracker.color.gray..L["Auto-open the current realm window for character that are level 10 and under"]..PepeGoldTracker.color.reset,
+                        descStyle = "inline",
+                        width = "full",
+                        type = "toggle",
+                        order = 4,
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.autoOpenCurrentRealm.hide = not val
+                        end,
+                        get = function(info)
+                            return not PepeGoldTracker.db.global.autoOpenCurrentRealm.hide
+                        end
+                    },
+                }
             },
-            author = {
-                type = "description",
-                name = PepeGoldTracker.color.lightorange..L["Author: "]..PepeGoldTracker.color.reset..GetAddOnMetadata("PepeGoldTracker", "Author") .. "\n",
-                order = 2
-            },
-            version = {
-                type = "description",
-                name = PepeGoldTracker.color.lightorange..L["Version: "]..PepeGoldTracker.color.reset..GetAddOnMetadata("PepeGoldTracker", "Version") .. "\n",
-                order = 3
-            },
-            hideminimap = {
-                name = L["Show minimap icon"],
-                desc = PepeGoldTracker.color.gray..L["Whether or not to show the minimap icon."]..PepeGoldTracker.color.reset,
-                descStyle = "inline",
-                width = "full",
-                type = "toggle",
-                order = 4,
-                set = function(info, val)
-                    PepeGoldTracker.db.global.minimap.hide = not val
-                    ldbi:Refresh("PepeGTMinimapButton", PepeGoldTracker.db.global.minimap)
-                end,
-                get = function(info)
-                    return not PepeGoldTracker.db.global.minimap.hide
-                end
-            },
-            turnOffCurrentRealmWindow = {
-                name = L["Show current realm window"],
-                desc = PepeGoldTracker.color.gray..L["Auto-open the current realm window for character that are level 10 and under"]..PepeGoldTracker.color.reset,
-                descStyle = "inline",
-                width = "full",
-                type = "toggle",
-                order = 4,
-                set = function(info, val)
-                    PepeGoldTracker.db.global.autoOpenCurrentRealm.hide = not val
-                end,
-                get = function(info)
-                    return not PepeGoldTracker.db.global.autoOpenCurrentRealm.hide
-                end
-            },
-            texture = {
-                type = "execute",
-                name = "Open sync window",
-                desc = "Note: this feature is still experimental and will only sync characters and not guild.",
-                descStyle = "inline",
+            synchronization = {
+                type = "group",
+                name = L["Multi-account synching"],
+                inline = true,
                 order = 5,
-                func = function()
-                    PepeGoldTracker.syncModule:Toggle()
-                end,
-              },
+                args = {
+                    description = {
+                        order = 1,
+                        type = "description",
+                        name = L["Note: this feature is still experimental and will only sync characters and not guild."],
+                    },
+                    openSync = {
+                        type = "execute",
+                        name = L["Open sync window"],
+                        order = 2,
+                        func = function()
+                            HideUIPanel(SettingsPanel)
+                            PepeGoldTracker.syncModule:Toggle()
+                        end,
+                    },
+                }
+            },
         }
     }
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable("PepeGoldTracker", self.options)
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", nil, nil, 'general')
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Synchronization Options"], "PepeGoldTracker", 'synchronization')
 end
 
 -- Register char if its first time logging

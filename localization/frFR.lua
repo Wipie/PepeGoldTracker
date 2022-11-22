@@ -63,7 +63,7 @@ if L then
     --[[
         Guild Viewer Window
     ]]
-    L["Guilds overview"] = "Suivi des guildes"
+    L["Guild overview"] = "Suivi des guildes"
     L["Purge DB"] = "Purger BD"
     L["Clear the guild database.\nThis effect is permanent and cannot be undone."] = "Efface la base de donnée des guildes.\nL'effet est permanent et ne peut être annulé"
     L["Only show guilds that are on this realm."] = "Affiche seulement les guildes qui sont sur ce serveur."
@@ -87,7 +87,7 @@ if L then
     --[[
         Character Viewer Window
     ]]
-    L["Characters overview"] = "Suivi des personnages"
+    L["Character overview"] = "Suivi des personnages"
     L["Only show characters that are on this realm."] = "Affiche seulement les personnes qui sont sur ce serveur"
     L["Character name"] = "Nom du personnage"
     L["Character "] = "Personnage "

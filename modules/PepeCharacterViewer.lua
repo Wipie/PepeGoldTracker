@@ -38,9 +38,9 @@ end
 function PepeCharacterViewer:DrawWindow()
     local characterWindow
     if (self.configDB.characterWindowSize ~= nil) then
-        characterWindow = StdUi:Window(UIParent, self.configDB.characterWindowSize.width, self.configDB.characterWindowSize.height, L["Characters overview"])
+        characterWindow = StdUi:Window(UIParent, self.configDB.characterWindowSize.width, self.configDB.characterWindowSize.height, L["Character overview"])
     else
-        characterWindow = StdUi:Window(UIParent, 950, 700, L["Characters overview"])
+        characterWindow = StdUi:Window(UIParent, 950, 700, L["Character overview"])
     end
 
     if (self.configDB.characterWindowPosition ~= nil) then
