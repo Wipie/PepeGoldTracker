@@ -32,8 +32,8 @@ function SlashCmdList.pgt(command)
         PepeGoldTracker.guildsViewer:OpenPanel()
     elseif (command == 'version') then
         PepeGoldTracker:Print(PepeGoldTracker.colorString ..L["The current PepeGoldTracker version is: "].. GetAddOnMetadata("PepeGoldTracker", "Version"))
-    elseif (command == 'sync') then
-        C_ChatInfo.SendAddonMessage("PepeSyncStatus", "request", "WHISPER", "Cynnmo-Medivh")
+    elseif (command == 'options') then
+        InterfaceOptionsFrame_OpenToCategory("PepeGoldTracker");
     elseif (command == 'realm') then
         PepeGoldTracker.currentRealm:Toggle()
     elseif (command == 'minimap') then
@@ -201,6 +201,16 @@ function PepeGoldTracker:SetupOptions()
                     return not PepeGoldTracker.db.global.autoOpenCurrentRealm.hide
                 end
             },
+            texture = {
+                type = "execute",
+                name = "Open sync window",
+                desc = "Note: this feature is still experimental and will only sync characters and not guild.",
+                descStyle = "inline",
+                order = 5,
+                func = function()
+                    PepeGoldTracker.syncModule:Toggle()
+                end,
+              },
         }
     }
 
