@@ -62,7 +62,7 @@ function PepeGoldTracker:OnInitialize()
 
     self.guildsViewer = PepeGoldTracker:GetModule("PepeGuildViewer")
     self.exportGuild = PepeGoldTracker:GetModule("PepeExportGuild")
-
+    self.syncModule = PepeGoldTracker:GetModule("PepeSync")
     self.currentRealm = PepeGoldTracker:GetModule("PepeCurrentRealm")
     for name, module in self:IterateModules() do
         module:SetEnabledState(true)
@@ -83,9 +83,7 @@ function PepeGoldTracker:OnEnable()
     success = C_ChatInfo.RegisterAddonMessagePrefix("PepeSync")
     C_ChatInfo.RegisterAddonMessagePrefix("PepeSyncStatus")
     C_ChatInfo.RegisterAddonMessagePrefix("PepeSyncStart")
-    if (success) then -- Synching
-        self:RegisterEvent("CHAT_MSG_ADDON", "OnSync")
-    end
+
     -- Guild related event
     if (self.IsRetail) then
         self:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", "OnBankEvent")
@@ -133,6 +131,9 @@ function PepeGoldTracker:DrawMinimapButton()
                 end },
                 { text = L["Toggle realm window"], notCheckable = true, func = function()
                     PepeGoldTracker.currentRealm:Toggle()
+                end },
+                { text = L["Toggle sync window"], notCheckable = true, func = function()
+                    PepeGoldTracker.syncModule:Toggle()
                 end },
             }
             EasyMenu(menu, self.menuFrame, "cursor", 0, 0, "MENU");
@@ -391,36 +392,6 @@ function PepeGoldTracker:OnEvent(event)
         end
     end
 end
-function PepeGoldTracker:OnSync(event, ...)
-    local prefix, content, channel, sender = ...
-    if ((event == "CHAT_MSG_ADDON") and (prefix == "PepeSyncStart")) then
-        local range = PepeGoldTracker:Split(content, ";")
-        PepeGoldTracker:OpenSyncWindow(range[1], range[2])
-    end
-    if ((event == "CHAT_MSG_ADDON") and (prefix == "PepeSyncStatus")) then
-        if content == "request" then
-            PepeGoldTracker:DrawConfirmationWindowRequestSync(sender)
-        end
-    end
-    if ((event == "CHAT_MSG_ADDON") and (prefix == "PepeSync")) then
-        local character = PepeGoldTracker:Split(content, ";")
-        self.syncWindow.progressBar:SetValue(character[7])
-        if character[7] == character[8] then
-            self.syncWindow.statusText:SetText("Synchronization completed")
-        else
-            self.syncWindow.statusText:SetText("Synching: "..character[1].. " ("..character[7].."/"..character[8]..")")
-        end
-        --[[
-        if (PepeGoldTracker:CheckIfCharExist(character[1])) then
-            print("Update")
-            --PepeGoldTracker:UpdateCharFromSync(character)
-        else
-            print("Register")
-            --PepeGoldTracker:RegisterCharFromSync(character)
-        end
-        ]]
-    end
-end
 
 function PepeGoldTracker:OnBankEvent(event, arg)
     if ((event == 'PLAYER_INTERACTION_MANAGER_FRAME_SHOW') or (event == 'PLAYER_INTERACTION_MANAGER_FRAME_HIDE')) then
@@ -498,73 +469,4 @@ function PepeGoldTracker:Split(string, delimiter)
         table.insert(result, match);
     end
     return result;
-end
-
-
-function PepeGoldTracker:OpenSyncWindow(min, max)
-    if not self.syncWindow then
-        PepeGoldTracker:OpenPanel(min, max)
-    elseif self.syncWindow:IsVisible() then
-        self.syncWindow:Hide()
-    else
-        self.syncWindow:Show()
-    end
-end
-
-function PepeGoldTracker:OpenPanel(min, max)
-    if (self.syncWindow == nil) then
-        self:DrawSyncWindow(min, max)
-    else
-        self.syncWindow:Show()
-    end
-end
-
-function PepeGoldTracker:DrawSyncWindow(min, max)
-    local syncWindow = StdUi:Window(UIParent, 350, 150, 'PepeSync');
-    syncWindow:SetPoint('CENTER');
-
-
-    local logoFrame = StdUi:Frame(syncWindow, 32, 32)
-    local logoTexture = StdUi:Texture(logoFrame, 32, 32, [=[Interface\Addons\PepeGoldTracker\media\PepeAlone.tga]=])
-    StdUi:GlueTop(logoTexture, logoFrame, 0, 0, "CENTER")
-    StdUi:GlueTop(logoFrame, syncWindow, 10, -10, "LEFT")
-
-    local pb = StdUi:ProgressBar(syncWindow, 300, 20);
-    StdUi:GlueTop(pb, syncWindow, 0, -55, 'CENTER');
-    pb:SetMinMaxValues(min, max);
-
-
-    local statusText = StdUi:Label(syncWindow, "", 14)
-    StdUi:GlueTop(statusText, syncWindow, 0, -80)
-
-    local closeButton = StdUi:Button(syncWindow, 80, 30, L["Close"])
-    StdUi:GlueBottom(closeButton, syncWindow, 0, 10, 'CENTER')
-    closeButton:SetScript('OnClick', function()
-        self.syncWindow:Hide()
-    end)
-
-    self.syncWindow = syncWindow
-    self.syncWindow.progressBar = pb
-    self.syncWindow.statusText = statusText
-end
-
-function PepeGoldTracker:DrawConfirmationWindowRequestSync(source)
-    local buttons = {
-        yes = {
-            text = L["Yes"],
-            onClick = function(b)
-                print("Yes")
-                b.window:Hide()
-            end
-        },
-        no = {
-            text = L["No"],
-            onClick = function(b)
-                print("No")
-                b.window:Hide()
-            end
-        },
-    }
-
-    StdUi:Confirm("PepeSync", source.." is requesting to sync your data.", buttons, 2)
 end
