@@ -19,6 +19,7 @@ PepeGoldTracker.color = {
     reset = '|r'
 }
 PepeGoldTracker.FRAME_LEVEL = 0
+PepeGoldTracker.character = {}
 PepeGoldTracker.Sync = {}
 
 SLASH_pgt1 = "/pepe"
