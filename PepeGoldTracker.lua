@@ -19,7 +19,7 @@ PepeGoldTracker.color = {
     reset = '|r'
 }
 PepeGoldTracker.FRAME_LEVEL = 0
-PepeGoldTracker.character = {}
+PepeGoldTracker.Sync = {}
 
 SLASH_pgt1 = "/pepe"
 SLASH_pgt2 = "/pepegoldtracker"
@@ -31,6 +31,8 @@ function SlashCmdList.pgt(command)
         PepeGoldTracker.guildsViewer:OpenPanel()
     elseif (command == 'version') then
         PepeGoldTracker:Print(PepeGoldTracker.colorString ..L["The current PepeGoldTracker version is: "].. GetAddOnMetadata("PepeGoldTracker", "Version"))
+    elseif (command == 'sync') then
+        C_ChatInfo.SendAddonMessage("PepeSyncStatus", "request", "WHISPER", "Cynnmo-Medivh")
     elseif (command == 'realm') then
         PepeGoldTracker.currentRealm:Toggle()
     elseif (command == 'minimap') then
@@ -77,6 +79,12 @@ function PepeGoldTracker:OnEnable()
     self:RegisterEvent("PLAYER_ENTERING_WORLD", "OnEvent")
     self:RegisterEvent("PLAYER_MONEY", "OnEvent")
 
+    success = C_ChatInfo.RegisterAddonMessagePrefix("PepeSync")
+    C_ChatInfo.RegisterAddonMessagePrefix("PepeSyncStatus")
+    C_ChatInfo.RegisterAddonMessagePrefix("PepeSyncStart")
+    if (success) then -- Synching
+        self:RegisterEvent("CHAT_MSG_ADDON", "OnSync")
+    end
     -- Guild related event
     if (self.IsRetail) then
         self:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", "OnBankEvent")
@@ -217,6 +225,24 @@ function PepeGoldTracker:RegisterChar()
     end
 end
 
+function PepeGoldTracker:RegisterCharFromSync(character)
+    local player = character[1]
+    local date = character[6]
+    self.character = {
+        realm = character[2],
+        name =  player,
+        faction = character[3],
+        gold = tonumber(character[4]),
+        date = date,
+        guild = character[5] and character[5] or "" -- Defaulting to empty to avoid nil due since nil is breaking the sort
+    }
+    if not (PepeGoldTracker:CheckIfCharExist(player)) then
+        PepeGoldTracker.db.global.characters[#PepeGoldTracker.db.global.characters + 1] = self.character
+        PepeGoldTracker:Print(L["Character synched from WoW 2 successfully."])
+    end
+end
+
+
 -- Update char data if he is already registered
 function PepeGoldTracker:UpdateChar()
     local allChars = PepeGoldTracker.db.global.characters
@@ -235,6 +261,22 @@ function PepeGoldTracker:UpdateChar()
         else
             PepeGoldTracker.db.global.characters[index].guild = ""
         end
+    end
+end
+
+
+function PepeGoldTracker:UpdateCharFromSync(character)
+    local allChars = PepeGoldTracker.db.global.characters
+    local player = character[1]
+    local date = character[6]
+
+    if (PepeGoldTracker:CheckIfCharExist(player)) then
+        local index = PepeGoldTracker:getIndexByName(allChars, player)
+        PepeGoldTracker.db.global.characters[index].gold = tonumber(character[4])
+        PepeGoldTracker.db.global.characters[index].date = date
+        PepeGoldTracker.db.global.characters[index].faction = character[3]
+        PepeGoldTracker.db.global.characters[index].realm = character[2]
+        PepeGoldTracker.db.global.characters[index].guild = character[5]
     end
 end
 
@@ -287,10 +329,15 @@ function PepeGoldTracker:UpdateGuild()
     end
 end
 -- Check if a character exist in the database
-function PepeGoldTracker:CheckIfCharExist() 
+function PepeGoldTracker:CheckIfCharExist(charName) 
     local allChars = PepeGoldTracker.db.global.characters
-    local name, realm = UnitFullName("player")
-    local player = name .. "-" .. realm
+    local player
+    if (charName) then
+        player = charName
+    else
+        local name, realm = UnitFullName("player")
+        player = name .. "-" .. realm
+    end
     for _, character in pairs(allChars) do
         if (character.name == player) then
             return true
@@ -343,6 +390,36 @@ function PepeGoldTracker:OnEvent(event)
         end
     end
 end
+function PepeGoldTracker:OnSync(event, ...)
+    local prefix, content, channel, sender = ...
+    if ((event == "CHAT_MSG_ADDON") and (prefix == "PepeSyncStart")) then
+        local range = PepeGoldTracker:Split(content, ";")
+        PepeGoldTracker:OpenSyncWindow(range[1], range[2])
+    end
+    if ((event == "CHAT_MSG_ADDON") and (prefix == "PepeSyncStatus")) then
+        if content == "request" then
+            PepeGoldTracker:DrawConfirmationWindowRequestSync(sender)
+        end
+    end
+    if ((event == "CHAT_MSG_ADDON") and (prefix == "PepeSync")) then
+        local character = PepeGoldTracker:Split(content, ";")
+        self.syncWindow.progressBar:SetValue(character[7])
+        if character[7] == character[8] then
+            self.syncWindow.statusText:SetText("Synchronization completed")
+        else
+            self.syncWindow.statusText:SetText("Synching: "..character[1].. " ("..character[7].."/"..character[8]..")")
+        end
+        --[[
+        if (PepeGoldTracker:CheckIfCharExist(character[1])) then
+            print("Update")
+            --PepeGoldTracker:UpdateCharFromSync(character)
+        else
+            print("Register")
+            --PepeGoldTracker:RegisterCharFromSync(character)
+        end
+        ]]
+    end
+end
 
 function PepeGoldTracker:OnBankEvent(event, arg)
     if ((event == 'PLAYER_INTERACTION_MANAGER_FRAME_SHOW') or (event == 'PLAYER_INTERACTION_MANAGER_FRAME_HIDE')) then
@@ -366,7 +443,7 @@ function PepeGoldTracker:formatGold(amount, onlyGold)
 
     if (onlyGold) then
         if gold > 0 then
-            return format('%s%s ', BreakUpLargeNumbers(gold), goldIcon)
+            return format('%s%s ', PepeGoldTracker:BreakUpLargeNumber(gold), goldIcon)
         elseif silver > 0 then
             return format('%d%s %d%s', silver, silverIcon, copper, copperIcon)
         else
@@ -375,7 +452,7 @@ function PepeGoldTracker:formatGold(amount, onlyGold)
     else
 
         if gold > 0 then
-            return format('%s%s %d%s %d%s', BreakUpLargeNumbers(gold), goldIcon, silver, silverIcon, copper, copperIcon)
+            return format('%s%s %d%s %d%s', PepeGoldTracker:BreakUpLargeNumber(gold), goldIcon, silver, silverIcon, copper, copperIcon)
         elseif silver > 0 then
             return format('%d%s %d%s', silver, silverIcon, copper, copperIcon)
         else
@@ -398,4 +475,95 @@ function PepeGoldTracker:getGuildIndexByName (table, name, realm)
            return i
         end
     end
+end
+
+function PepeGoldTracker:BreakUpLargeNumber(amount)
+    amount = tostring(math.floor(amount));
+    local newDisplay = "";
+    local strlen = amount:len();
+    --Add each thing behind a comma
+    for i=4, strlen, 3 do
+        newDisplay = ","..amount:sub(-(i - 1), -(i - 3))..newDisplay;
+    end
+    --Add everything before the first comma
+    newDisplay = amount:sub(1, (strlen % 3 == 0) and 3 or (strlen % 3))..newDisplay;
+    return newDisplay;
+end
+
+
+function PepeGoldTracker:Split(string, delimiter)
+    result = {};
+    for match in (string..delimiter):gmatch("(.-)"..delimiter) do
+        table.insert(result, match);
+    end
+    return result;
+end
+
+
+function PepeGoldTracker:OpenSyncWindow(min, max)
+    if not self.syncWindow then
+        PepeGoldTracker:OpenPanel(min, max)
+    elseif self.syncWindow:IsVisible() then
+        self.syncWindow:Hide()
+    else
+        self.syncWindow:Show()
+    end
+end
+
+function PepeGoldTracker:OpenPanel(min, max)
+    if (self.syncWindow == nil) then
+        self:DrawSyncWindow(min, max)
+    else
+        self.syncWindow:Show()
+    end
+end
+
+function PepeGoldTracker:DrawSyncWindow(min, max)
+    local syncWindow = StdUi:Window(UIParent, 350, 150, 'PepeSync');
+    syncWindow:SetPoint('CENTER');
+
+
+    local logoFrame = StdUi:Frame(syncWindow, 32, 32)
+    local logoTexture = StdUi:Texture(logoFrame, 32, 32, [=[Interface\Addons\PepeGoldTracker\media\PepeAlone.tga]=])
+    StdUi:GlueTop(logoTexture, logoFrame, 0, 0, "CENTER")
+    StdUi:GlueTop(logoFrame, syncWindow, 10, -10, "LEFT")
+
+    local pb = StdUi:ProgressBar(syncWindow, 300, 20);
+    StdUi:GlueTop(pb, syncWindow, 0, -55, 'CENTER');
+    pb:SetMinMaxValues(min, max);
+
+
+    local statusText = StdUi:Label(syncWindow, "", 14)
+    StdUi:GlueTop(statusText, syncWindow, 0, -80)
+
+    local closeButton = StdUi:Button(syncWindow, 80, 30, L["Close"])
+    StdUi:GlueBottom(closeButton, syncWindow, 0, 10, 'CENTER')
+    closeButton:SetScript('OnClick', function()
+        self.syncWindow:Hide()
+    end)
+
+    self.syncWindow = syncWindow
+    self.syncWindow.progressBar = pb
+    self.syncWindow.statusText = statusText
+end
+
+function PepeGoldTracker:DrawConfirmationWindowRequestSync(source)
+    local buttons = {
+        yes = {
+            text = L["Yes"],
+            onClick = function(b)
+                print("Yes")
+                b.window:Hide()
+            end
+        },
+        no = {
+            text = L["No"],
+            onClick = function(b)
+                print("No")
+                b.window:Hide()
+            end
+        },
+    }
+
+    StdUi:Confirm("PepeSync", source.." is requesting to sync your data.", buttons, 2)
 end
