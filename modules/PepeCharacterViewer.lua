@@ -38,9 +38,9 @@ end
 function PepeCharacterViewer:DrawWindow()
     local characterWindow
     if (self.configDB.characterWindowSize ~= nil) then
-        characterWindow = StdUi:Window(UIParent, self.configDB.characterWindowSize.width, self.configDB.characterWindowSize.height, L["Characters overview"])
+        characterWindow = StdUi:Window(UIParent, self.configDB.characterWindowSize.width, self.configDB.characterWindowSize.height, L["Character overview"])
     else
-        characterWindow = StdUi:Window(UIParent, 950, 700, L["Characters overview"])
+        characterWindow = StdUi:Window(UIParent, 950, 700, L["Character overview"])
     end
 
     if (self.configDB.characterWindowPosition ~= nil) then
@@ -155,6 +155,26 @@ function PepeCharacterViewer:DrawSearchResultsTable()
 
     local cols = {
         {
+            name = "",
+            width = 24,
+            align = "CENTER",
+            index = "syncIcon",
+            format = "icon",
+            texture = true,
+            events = {
+                OnEnter = function(table, cellFrame, rowFrame, rowData, columnData, rowIndex)
+                    if rowData.syncIcon == 625757 then
+                        GameTooltip:SetOwner(cellFrame)
+                        GameTooltip:SetText(L["Synched character"])
+                        GameTooltip:Show()
+                    end
+                end,
+                OnLeave = function(rowFrame, cellFrame)
+                    GameTooltip:Hide()
+                end
+            },
+        },
+        {
             name = L["Character name"],
             width = 150,
             align = "MIDDLE",
@@ -202,6 +222,7 @@ function PepeCharacterViewer:DrawSearchResultsTable()
             width = 32,
             align = "CENTER",
             index = "deleteButton",
+            sortable = false,
             format = "icon",
             texture = true,
             events = {
@@ -270,6 +291,9 @@ function PepeCharacterViewer:SearchChar(filter)
                 or (character.date and character.date:lower():find(searchFilter, 1, true))
                 or (character.name and character.name:lower():find(searchFilter, 1, true)))) then
             character.deleteButton = [=[Interface\Buttons\UI-GroupLoot-Pass-Down]=]
+            if not (character.syncIcon) then
+                character.syncIcon = 0
+            end
             character.id = index
             table.insert(filteredResults, character)
         end
@@ -291,7 +315,7 @@ function PepeCharacterViewer:DrawConfirmationWindow()
                 local db = PepeGoldTracker.db.global.characters
                 table.remove(db, self.id)
                 PepeCharacterViewer:SearchChar("")
-                PepeGoldTracker:Print(L["Character "]..self.name..L[" deleted successfully"])
+                PepeGoldTracker:Print(L["Character %s deleted successfully"]:format(self.name))
                 b.window:Hide()
                 PepeCharacterViewer:Toggle()
             end
@@ -305,7 +329,7 @@ function PepeCharacterViewer:DrawConfirmationWindow()
         },
     }
 
-    StdUi:Confirm(L["Delete character"], L["Are you sure you want to delete "]..self.name, buttons, 1)
+    StdUi:Confirm(L["Delete character"], L["Are you sure you want to delete %s"]:format(self.name), buttons, 1)
 end
 
 function PepeCharacterViewer:ApplyDefaultSort(tableToSort)
@@ -337,7 +361,7 @@ function PepeCharacterViewer:UpdateResultsText()
         self.characterWindow.resultsLabel:SetText(PepeGoldTracker:formatGold(totalGold, true))
         self.characterWindow.resultsLabel:Show()
 
-        self.characterWindow.countLabel:SetText(L["Current results: "]..#self.currentView)
+        self.characterWindow.countLabel:SetText(L["Current results: %s"]:format(#self.currentView))
         self.characterWindow.countLabel:Show()
     else
         self.characterWindow.resultsLabel:Hide()

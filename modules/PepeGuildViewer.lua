@@ -1,19 +1,19 @@
 local PepeGoldTracker = LibStub("AceAddon-3.0"):GetAddon("PepeGoldTracker")
-local OblvionGuildsViewer = PepeGoldTracker:NewModule("PepeGuildViewer", "AceEvent-3.0", "AceHook-3.0", "AceConsole-3.0")
+local PepeGuildsViewer = PepeGoldTracker:NewModule("PepeGuildViewer", "AceEvent-3.0", "AceHook-3.0", "AceConsole-3.0")
 local StdUi = LibStub("StdUi")
 local L = LibStub("AceLocale-3.0"):GetLocale("PepeGoldTracker")
 
-OblvionGuildsViewer.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
-OblvionGuildsViewer.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
-OblvionGuildsViewer.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
-OblvionGuildsViewer.IsWrath = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_WRATH_CLASSIC
+PepeGuildsViewer.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
+PepeGuildsViewer.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
+PepeGuildsViewer.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+PepeGuildsViewer.IsWrath = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_WRATH_CLASSIC
 
-function OblvionGuildsViewer:OnEnable()
+function PepeGuildsViewer:OnEnable()
     self.configDB = PepeGoldTracker.db.char
     self:RegisterEvent("GUILDBANK_UPDATE_MONEY", "OnEvent")
 end
 
-function OblvionGuildsViewer:OpenPanel()
+function PepeGuildsViewer:OpenPanel()
     if (self.guildWindow == nil) then
         self:DrawWindow()
         self:DrawSearchPane()
@@ -24,18 +24,18 @@ function OblvionGuildsViewer:OpenPanel()
     self:SearchGuild("")
 end
 
-function OblvionGuildsViewer:Toggle()
+function PepeGuildsViewer:Toggle()
     if not self.guildWindow then
-        OblvionGuildsViewer:OpenPanel()
+        PepeGuildsViewer:OpenPanel()
     elseif self.guildWindow:IsVisible() then
         self.guildWindow:Hide()
     else
         self.guildWindow:Show()
     end
-    OblvionGuildsViewer:SearchGuild("")
+    PepeGuildsViewer:SearchGuild("")
 end
 
-function OblvionGuildsViewer:DrawWindow()
+function PepeGuildsViewer:DrawWindow()
     local guildWindow
     if (self.configDB.guildWindowSize ~= nil) then
         guildWindow = StdUi:Window(UIParent, self.configDB.guildWindowSize.width, self.configDB.guildWindowSize.height, L["Guilds overview"])
@@ -54,13 +54,13 @@ function OblvionGuildsViewer:DrawWindow()
     end
 
     guildWindow:SetScript("OnSizeChanged", function(self)
-        OblvionGuildsViewer.configDB.guildWindowSize = { width = self:GetWidth(), height = self:GetHeight() }
+        PepeGuildsViewer.configDB.guildWindowSize = { width = self:GetWidth(), height = self:GetHeight() }
     end)
 
     guildWindow:SetScript('OnDragStop', function(self)
         self:StopMovingOrSizing()
         local point, _, relPoint, xOfs, yOfs = self:GetPoint()
-        OblvionGuildsViewer.configDB.guildWindowPosition = { point = point, relPoint = relPoint, relX = xOfs, relY = yOfs }
+        PepeGuildsViewer.configDB.guildWindowPosition = { point = point, relPoint = relPoint, relX = xOfs, relY = yOfs }
     end)
 
     StdUi:MakeResizable(guildWindow, "BOTTOMRIGHT")
@@ -91,12 +91,12 @@ function OblvionGuildsViewer:DrawWindow()
 end
 
 
-function OblvionGuildsViewer:ExportData()
+function PepeGuildsViewer:ExportData()
     PepeGoldTracker.exportGuild:Toggle()
-    OblvionGuildsViewer:Toggle()
+    PepeGuildsViewer:Toggle()
 end
 
-function OblvionGuildsViewer:DrawSearchPane()
+function PepeGuildsViewer:DrawSearchPane()
     local guildWindow = self.guildWindow
     local searchBox = StdUi:Autocomplete(guildWindow, 400, 30, "", nil, nil, nil)
     StdUi:ApplyPlaceholder(searchBox, L["Search.. name, realm, faction, date"], [=[Interface\Common\UI-Searchbox-Icon]=])
@@ -108,17 +108,17 @@ function OblvionGuildsViewer:DrawSearchPane()
     StdUi:GlueTop(searchButton, guildWindow, 420, -40, "LEFT")
 
     searchBox:SetScript("OnEnterPressed", function()
-        OblvionGuildsViewer:SearchGuild(searchBox:GetText())
+        PepeGuildsViewer:SearchGuild(searchBox:GetText())
     end)
     searchButton:SetScript("OnClick", function()
-        OblvionGuildsViewer:SearchGuild(searchBox:GetText())
+        PepeGuildsViewer:SearchGuild(searchBox:GetText())
     end)
 
     local exportButton = StdUi:Button(guildWindow, 80, 30, L["Export"])
     StdUi:GlueRight(exportButton, searchButton, 10, 0)
 
     exportButton:SetScript("OnClick", function()
-        OblvionGuildsViewer:ExportData()
+        PepeGuildsViewer:ExportData()
     end)
     
     local deleteAll = StdUi:Button(guildWindow, 80, 30, L["Purge DB"])
@@ -126,14 +126,14 @@ function OblvionGuildsViewer:DrawSearchPane()
     StdUi:GlueRight(deleteAll, exportButton, 10, 0)
 
     deleteAll:SetScript("OnClick", function()
-        OblvionGuildsViewer:Toggle()
-        OblvionGuildsViewer:DrawConfirmationWindowAllGuilds()
+        PepeGuildsViewer:Toggle()
+        PepeGuildsViewer:DrawConfirmationWindowAllGuilds()
     end)
 
     local thisRealmToggle = StdUi:Checkbox(guildWindow, L["Only show this realm"])
     StdUi:GlueRight(thisRealmToggle, deleteAll, 15, 0)
     thisRealmToggle.OnValueChanged = function(self, state)
-        OblvionGuildsViewer:SearchGuild(searchBox:GetText())
+        PepeGuildsViewer:SearchGuild(searchBox:GetText())
     end
     StdUi:FrameTooltip(thisRealmToggle, L["Only show guilds that are on this realm."], "tooltip", "RIGHT", true)
 
@@ -143,13 +143,13 @@ function OblvionGuildsViewer:DrawSearchPane()
     guildWindow.searchButton = searchButton
 end
 
-function OblvionGuildsViewer:OnEvent(event)
+function PepeGuildsViewer:OnEvent(event)
     if (event == 'GUILDBANK_UPDATE_MONEY')  then
-        OblvionGuildsViewer:SearchGuild("")
+        PepeGuildsViewer:SearchGuild("")
     end
 end
 
-function OblvionGuildsViewer:DrawSearchResultsTable()
+function PepeGuildsViewer:DrawSearchResultsTable()
     local guildWindow = self.guildWindow
 
     local function showTooltip(frame, show, text)
@@ -206,10 +206,10 @@ function OblvionGuildsViewer:DrawSearchResultsTable()
             texture = true,
             events = {
                 OnClick = function(rowFrame, cellFrame, data, cols, row, realRow, column, table, button, ...)
-                    OblvionGuildsViewer:Toggle()
+                    PepeGuildsViewer:Toggle()
                     self.id = cols.id
                     self.name = cols.name
-                    OblvionGuildsViewer:DrawConfirmationWindow()
+                    PepeGuildsViewer:DrawConfirmationWindow()
                 end,
             },
         },
@@ -244,7 +244,7 @@ function OblvionGuildsViewer:DrawSearchResultsTable()
     StdUi:GlueTop(guildWindow.stateLabel, guildWindow.searchResults, 0, -40, "CENTER")
 end
 
-function OblvionGuildsViewer:UpdateStateText()
+function PepeGuildsViewer:UpdateStateText()
     if (#self.currentView > 0) then
         self.guildWindow.stateLabel:Hide()
     else
@@ -252,7 +252,7 @@ function OblvionGuildsViewer:UpdateStateText()
     end
 end
 
-function OblvionGuildsViewer:SearchGuild(filter)
+function PepeGuildsViewer:SearchGuild(filter)
     local guildWindow = self.guildWindow
     local searchFilter = filter:lower()
     local allResults = PepeGoldTracker.db.global.guilds
@@ -280,21 +280,21 @@ function OblvionGuildsViewer:SearchGuild(filter)
                 table.insert(filteredResults, guild)
             end
         elseif (guild.name == nil or guild.realm == nil or guild.gold == nil or guild.faction == nil) then
-            PepeGoldTracker:Print(L["Detecting a bugged guild ID: "]..index..L[". The guild will be deleted make sure to confirm information while exporting!"])
+            PepeGoldTracker:Print(L["Detecting a bugged guild ID: %s. The guild will be deleted make sure to confirm information while exporting!"]:format(index))
             table.remove(allResults, index)
         end
     end
 
     -- TODO: This really should not be necessary, but I can't figure out how to get StdUi to sort our primary column by desc by default...
-    OblvionGuildsViewer:ApplyDefaultSort(filteredResults)
+    PepeGuildsViewer:ApplyDefaultSort(filteredResults)
 
     self.currentView = filteredResults
     self.guildWindow.searchResults:SetData(self.currentView, true)
-    OblvionGuildsViewer:UpdateStateText()
-    OblvionGuildsViewer:UpdateResultsText()
+    PepeGuildsViewer:UpdateStateText()
+    PepeGuildsViewer:UpdateResultsText()
 end
 
-function OblvionGuildsViewer:ApplyDefaultSort(tableToSort)
+function PepeGuildsViewer:ApplyDefaultSort(tableToSort)
     if (self.guildWindow.searchResults.head.columns) then
         local isSorted = false
 
@@ -314,7 +314,7 @@ function OblvionGuildsViewer:ApplyDefaultSort(tableToSort)
     return tableToSort
 end
 
-function OblvionGuildsViewer:UpdateResultsText()
+function PepeGuildsViewer:UpdateResultsText()
     if (#self.currentView > 0) then
         local totalGold = 0
         for _, guild in pairs(self.currentView) do
@@ -323,7 +323,7 @@ function OblvionGuildsViewer:UpdateResultsText()
         self.guildWindow.resultsLabel:SetText(PepeGoldTracker:formatGold(totalGold, true))
         self.guildWindow.resultsLabel:Show()
 
-        self.guildWindow.countLabel:SetText(L["Current results: "] .. tostring(#self.currentView))
+        self.guildWindow.countLabel:SetText(L["Current results: %s"]:format(tostring(#self.currentView)))
         self.guildWindow.countLabel:Show()
     else
         self.guildWindow.resultsLabel:Hide()
@@ -331,32 +331,32 @@ function OblvionGuildsViewer:UpdateResultsText()
     end
 end
 
-function OblvionGuildsViewer:DrawConfirmationWindow()
+function PepeGuildsViewer:DrawConfirmationWindow()
     local buttons = {
         yes = {
             text = L["Yes"],
             onClick = function(b)
                 local db = PepeGoldTracker.db.global.guilds
                 table.remove(db, self.id)
-                OblvionGuildsViewer:SearchGuild("")
-                PepeGoldTracker:Print(L["Guild "]..self.name..L[" deleted successfully"])
+                PepeGuildsViewer:SearchGuild("")
+                PepeGoldTracker:Print(L["Guild %s deleted successfully"]:format(self.name))
                 b.window:Hide()
-                OblvionGuildsViewer:Toggle()
+                PepeGuildsViewer:Toggle()
             end
         },
         no = {
             text = L["No"],
             onClick = function(b)
                 b.window:Hide()
-                OblvionGuildsViewer:Toggle()
+                PepeGuildsViewer:Toggle()
             end
         },
     }
 
-    StdUi:Confirm(L["Delete guild"], L["Are you sure you want to delete "]..self.name, buttons, 2)
+    StdUi:Confirm(L["Delete guild"], L["Are you sure you want to delete %s"]:format(self.name), buttons, 2)
 end
 
-function OblvionGuildsViewer:DrawConfirmationWindowAllGuilds()
+function PepeGuildsViewer:DrawConfirmationWindowAllGuilds()
     local buttons = {
         yes = {
             text = L["Yes"],
@@ -364,17 +364,17 @@ function OblvionGuildsViewer:DrawConfirmationWindowAllGuilds()
                 for index, guild in pairs(PepeGoldTracker.db.global.guilds) do
                     PepeGoldTracker.db.global.guilds[index] = nil
                 end
-                OblvionGuildsViewer:SearchGuild("")
+                PepeGuildsViewer:SearchGuild("")
                 PepeGoldTracker:Print(L["All guilds have been successfully deleted."])
                 b.window:Hide()
-                OblvionGuildsViewer:Toggle()
+                PepeGuildsViewer:Toggle()
             end
         },
         no = {
             text = L["No"],
             onClick = function(b)
                 b.window:Hide()
-                OblvionGuildsViewer:Toggle()
+                PepeGuildsViewer:Toggle()
             end
         },
     }

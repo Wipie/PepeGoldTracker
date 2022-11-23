@@ -20,6 +20,7 @@ PepeGoldTracker.color = {
 }
 PepeGoldTracker.FRAME_LEVEL = 0
 PepeGoldTracker.character = {}
+PepeGoldTracker.Sync = {}
 
 SLASH_pgt1 = "/pepe"
 SLASH_pgt2 = "/pepegoldtracker"
@@ -30,7 +31,11 @@ function SlashCmdList.pgt(command)
     elseif (command == 'guild') then
         PepeGoldTracker.guildsViewer:OpenPanel()
     elseif (command == 'version') then
-        PepeGoldTracker:Print(PepeGoldTracker.colorString ..L["The current PepeGoldTracker version is: "].. GetAddOnMetadata("PepeGoldTracker", "Version"))
+        PepeGoldTracker:Print(PepeGoldTracker.colorString ..L["The current PepeGoldTracker version is: %s"]:format(GetAddOnMetadata("PepeGoldTracker", "Version")))
+    elseif (command == 'options') then
+        InterfaceOptionsFrame_OpenToCategory("PepeGoldTracker");
+    elseif (command == 'sync') then
+        PepeGoldTracker.syncModule:Toggle()
     elseif (command == 'realm') then
         PepeGoldTracker.currentRealm:Toggle()
     elseif (command == 'minimap') then
@@ -43,6 +48,7 @@ function SlashCmdList.pgt(command)
         print("   " .. PepeGoldTracker.color.orange .. " guild "..PepeGoldTracker.color.reset ..L["- open guild window"])
         print("   " .. PepeGoldTracker.color.orange .. " version "..PepeGoldTracker.color.reset ..L["- print the version number of the addon."])
         print("   " .. PepeGoldTracker.color.orange .. " realm "..PepeGoldTracker.color.reset ..L["- open a window showing what realm you are logged on."])
+        print("   " .. PepeGoldTracker.color.orange .. " options "..PepeGoldTracker.color.reset ..L["- open the options window."])
         print("   " .. PepeGoldTracker.color.orange .. " minimap "..PepeGoldTracker.color.reset ..L["- toggle visibility of minimap button"])
     end
 end
@@ -59,14 +65,13 @@ function PepeGoldTracker:OnInitialize()
 
     self.guildsViewer = PepeGoldTracker:GetModule("PepeGuildViewer")
     self.exportGuild = PepeGoldTracker:GetModule("PepeExportGuild")
-
+    self.syncModule = PepeGoldTracker:GetModule("PepeSync")
     self.currentRealm = PepeGoldTracker:GetModule("PepeCurrentRealm")
     for name, module in self:IterateModules() do
         module:SetEnabledState(true)
     end
 
     PepeGoldTracker:SetupOptions() -- Options Page
-    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", "PepeGoldTracker")
 
     print(PepeGoldTracker.color.orange .."PepeGoldTracker "..GetAddOnMetadata("PepeGoldTracker", "Version")..L[" initializated successfully"])
 end
@@ -76,6 +81,10 @@ function PepeGoldTracker:OnEnable()
     -- Char related event
     self:RegisterEvent("PLAYER_ENTERING_WORLD", "OnEvent")
     self:RegisterEvent("PLAYER_MONEY", "OnEvent")
+
+    success = C_ChatInfo.RegisterAddonMessagePrefix("PepeSync")
+    C_ChatInfo.RegisterAddonMessagePrefix("PepeSyncStatus")
+    C_ChatInfo.RegisterAddonMessagePrefix("PepeSyncStart")
 
     -- Guild related event
     if (self.IsRetail) then
@@ -142,59 +151,87 @@ end
 function PepeGoldTracker:SetupOptions()
     self.options = {
         name = "PepeGoldTracker",
-        descStyle = "inline",
         type = "group",
-        childGroups = "tab",
         args = {
-            desc = {
-                type = "description",
-                name = L["Addon that help tracking gold stored accross your account"],
-                fontSize = "medium",
-                order = 1
+            general = {
+                type = "group",
+                name = "PepeGoldTracker",
+                args = {
+                    desc = {
+                        type = "description",
+                        name = L["Addon that help tracking gold stored accross your account"],
+                        fontSize = "medium",
+                        order = 1
+                    },
+                    author = {
+                        type = "description",
+                        name = PepeGoldTracker.color.lightorange..L["Author: "]..PepeGoldTracker.color.reset..GetAddOnMetadata("PepeGoldTracker", "Author") .. "\n",
+                        order = 2
+                    },
+                    version = {
+                        type = "description",
+                        name = PepeGoldTracker.color.lightorange..L["Version: "]..PepeGoldTracker.color.reset..GetAddOnMetadata("PepeGoldTracker", "Version") .. "\n",
+                        order = 3
+                    },
+                    hideminimap = {
+                        name = L["Show minimap icon"],
+                        desc = PepeGoldTracker.color.gray..L["Whether or not to show the minimap icon."]..PepeGoldTracker.color.reset,
+                        descStyle = "inline",
+                        width = "full",
+                        type = "toggle",
+                        order = 4,
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.minimap.hide = not val
+                            ldbi:Refresh("PepeGTMinimapButton", PepeGoldTracker.db.global.minimap)
+                        end,
+                        get = function(info)
+                            return not PepeGoldTracker.db.global.minimap.hide
+                        end
+                    },
+                    turnOffCurrentRealmWindow = {
+                        name = L["Show current realm window"],
+                        desc = PepeGoldTracker.color.gray..L["Auto-open the current realm window for character that are level 10 and under"]..PepeGoldTracker.color.reset,
+                        descStyle = "inline",
+                        width = "full",
+                        type = "toggle",
+                        order = 4,
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.autoOpenCurrentRealm.hide = not val
+                        end,
+                        get = function(info)
+                            return not PepeGoldTracker.db.global.autoOpenCurrentRealm.hide
+                        end
+                    },
+                }
             },
-            author = {
-                type = "description",
-                name = PepeGoldTracker.color.lightorange..L["Author: "]..PepeGoldTracker.color.reset..GetAddOnMetadata("PepeGoldTracker", "Author") .. "\n",
-                order = 2
-            },
-            version = {
-                type = "description",
-                name = PepeGoldTracker.color.lightorange..L["Version: "]..PepeGoldTracker.color.reset..GetAddOnMetadata("PepeGoldTracker", "Version") .. "\n",
-                order = 3
-            },
-            hideminimap = {
-                name = L["Show minimap icon"],
-                desc = PepeGoldTracker.color.gray..L["Whether or not to show the minimap icon."]..PepeGoldTracker.color.reset,
-                descStyle = "inline",
-                width = "full",
-                type = "toggle",
-                order = 4,
-                set = function(info, val)
-                    PepeGoldTracker.db.global.minimap.hide = not val
-                    ldbi:Refresh("PepeGTMinimapButton", PepeGoldTracker.db.global.minimap)
-                end,
-                get = function(info)
-                    return not PepeGoldTracker.db.global.minimap.hide
-                end
-            },
-            turnOffCurrentRealmWindow = {
-                name = L["Show current realm window"],
-                desc = PepeGoldTracker.color.gray..L["Auto-open the current realm window for character that are level 10 and under"]..PepeGoldTracker.color.reset,
-                descStyle = "inline",
-                width = "full",
-                type = "toggle",
-                order = 4,
-                set = function(info, val)
-                    PepeGoldTracker.db.global.autoOpenCurrentRealm.hide = not val
-                end,
-                get = function(info)
-                    return not PepeGoldTracker.db.global.autoOpenCurrentRealm.hide
-                end
+            synchronization = {
+                type = "group",
+                name = L["Multi-account synching"],
+                inline = true,
+                order = 5,
+                args = {
+                    description = {
+                        order = 1,
+                        type = "description",
+                        name = L["Note: this feature is still experimental and will only sync characters and not guild."],
+                    },
+                    openSync = {
+                        type = "execute",
+                        name = L["Open sync window"],
+                        order = 2,
+                        func = function()
+                            HideUIPanel(SettingsPanel)
+                            PepeGoldTracker.syncModule:Toggle()
+                        end,
+                    },
+                }
             },
         }
     }
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable("PepeGoldTracker", self.options)
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", nil, nil, 'general')
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Synchronization Options"], "PepeGoldTracker", 'synchronization')
 end
 
 -- Register char if its first time logging
@@ -209,13 +246,32 @@ function PepeGoldTracker:RegisterChar()
         faction = select(1, UnitFactionGroup("player")),
         gold = GetMoney("player"),
         date = date,
-        guild = "" -- Defaulting to empty to avoid nil due since nil is breaking the sort
+        guild = "", -- Defaulting to empty to avoid nil due since nil is breaking the sort
+        syncIcon = 0,
     }
     if not (PepeGoldTracker:CheckIfCharExist()) then
         PepeGoldTracker.db.global.characters[#PepeGoldTracker.db.global.characters + 1] = self.character
         PepeGoldTracker:Print(L["Character registered successfully."])
     end
 end
+
+function PepeGoldTracker:RegisterCharFromSync(character)
+    local player = character[1]
+    local date = character[6]
+    self.character = {
+        realm = character[2],
+        name =  player,
+        faction = character[3],
+        gold = tonumber(character[4]),
+        date = date,
+        syncIcon = 625757,
+        guild = character[5] and character[5] or "" -- Defaulting to empty to avoid nil due since nil is breaking the sort
+    }
+    if not (PepeGoldTracker:CheckIfCharExist(player)) then
+        PepeGoldTracker.db.global.characters[#PepeGoldTracker.db.global.characters + 1] = self.character
+    end
+end
+
 
 -- Update char data if he is already registered
 function PepeGoldTracker:UpdateChar()
@@ -235,6 +291,22 @@ function PepeGoldTracker:UpdateChar()
         else
             PepeGoldTracker.db.global.characters[index].guild = ""
         end
+    end
+end
+
+
+function PepeGoldTracker:UpdateCharFromSync(character)
+    local allChars = PepeGoldTracker.db.global.characters
+    local player = character[1]
+    local date = character[6]
+
+    if (PepeGoldTracker:CheckIfCharExist(player)) then
+        local index = PepeGoldTracker:getIndexByName(allChars, player)
+        PepeGoldTracker.db.global.characters[index].gold = tonumber(character[4])
+        PepeGoldTracker.db.global.characters[index].date = date
+        PepeGoldTracker.db.global.characters[index].faction = character[3]
+        PepeGoldTracker.db.global.characters[index].realm = character[2]
+        PepeGoldTracker.db.global.characters[index].guild = character[5]
     end
 end
 
@@ -287,10 +359,15 @@ function PepeGoldTracker:UpdateGuild()
     end
 end
 -- Check if a character exist in the database
-function PepeGoldTracker:CheckIfCharExist() 
+function PepeGoldTracker:CheckIfCharExist(charName) 
     local allChars = PepeGoldTracker.db.global.characters
-    local name, realm = UnitFullName("player")
-    local player = name .. "-" .. realm
+    local player
+    if (charName) then
+        player = charName
+    else
+        local name, realm = UnitFullName("player")
+        player = name .. "-" .. realm
+    end
     for _, character in pairs(allChars) do
         if (character.name == player) then
             return true
@@ -366,7 +443,8 @@ function PepeGoldTracker:formatGold(amount, onlyGold)
 
     if (onlyGold) then
         if gold > 0 then
-            return format('%s%s ', BreakUpLargeNumbers(gold), goldIcon)
+            -- Todo: Implementing option to change the BreakUpLargeNumber to 1,234,567 instead of 1234567
+            return format('%s%s ', gold, goldIcon)
         elseif silver > 0 then
             return format('%d%s %d%s', silver, silverIcon, copper, copperIcon)
         else
@@ -375,7 +453,7 @@ function PepeGoldTracker:formatGold(amount, onlyGold)
     else
 
         if gold > 0 then
-            return format('%s%s %d%s %d%s', BreakUpLargeNumbers(gold), goldIcon, silver, silverIcon, copper, copperIcon)
+            return format('%s%s %d%s %d%s', gold, goldIcon, silver, silverIcon, copper, copperIcon)
         elseif silver > 0 then
             return format('%d%s %d%s', silver, silverIcon, copper, copperIcon)
         else
@@ -398,4 +476,26 @@ function PepeGoldTracker:getGuildIndexByName (table, name, realm)
            return i
         end
     end
+end
+
+function PepeGoldTracker:BreakUpLargeNumber(amount)
+    amount = tostring(math.floor(amount));
+    local newDisplay = "";
+    local strlen = amount:len();
+    --Add each thing behind a comma
+    for i=4, strlen, 3 do
+        newDisplay = ","..amount:sub(-(i - 1), -(i - 3))..newDisplay;
+    end
+    --Add everything before the first comma
+    newDisplay = amount:sub(1, (strlen % 3 == 0) and 3 or (strlen % 3))..newDisplay;
+    return newDisplay;
+end
+
+
+function PepeGoldTracker:Split(string, delimiter)
+    result = {};
+    for match in (string..delimiter):gmatch("(.-)"..delimiter) do
+        table.insert(result, match);
+    end
+    return result;
 end
