@@ -11,6 +11,7 @@ if L then
     L["- open a window showing what realm you are logged on."] = "- ouvre un panneau affichant le serveur ou vous êtes actuellement connecté"
     L["- toggle visibility of minimap button"] = "- permet d'activer ou désactivé le boutton de la minimap"
     L["The current PepeGoldTracker version is: "] = "La version actuelle de PepeGoldTracker est: "
+    L["- open the options window."] = "- ouvre la fenêtre des options"
 
     --[[
         General
@@ -46,6 +47,10 @@ if L then
     L["Whether or not to show the minimap icon."] = "Si vous souhaitez affiché l'icone de minimap"
     L["Show current realm window"] = "Affiche la fenêtre du serveur actuel"
     L["Auto-open the current realm window for character that are level 10 and under"] = "Ouvre automatiquement la fenêtre du serveur actuel pour les personnages de niveau 10 ou moins"
+    L["Multi-account synching"] = "Synchronization multi-comptes"
+    L["Synchronization Options"] = "Options de synchronization"
+    L["Note: this feature is still experimental and will only sync characters and not guild."] = "Note: cette fonctionnalité est encore en expérimentation, elle ne fonctionne uniquement pour la synchronization des personnages, pas des guildes."
+    L["Open sync window"] = "Ouvrir la fenêtre de synchronization"
 
     --[[
         Minimap
@@ -92,4 +97,21 @@ if L then
     L["Character name"] = "Nom du personnage"
     L["Character "] = "Personnage "
     L["Delete character"] = "Suppression de personnage"
+
+    --[[
+        Synchronization
+    ]]
+    L["You cannot synchronize with yourself."] = "Vous ne pouvez pas faire de synchronisation avec vous-même."
+    L["%s is requesting to sync your data."] = "%s souhaite synchronisé vos données."
+    L["Synchronization completed. You may now log off."] = "Synchronisation terminée. Vous pouvez désormais vous déconnectez."
+    L["Character data sent for: %s"] = "Données de personnage envoyé pour: %s"
+    L["Started synching. Do not close your game."] = "Synchronisation commencée. Ne fermez pas votre jeu."
+    L["Sync request has been sent to %s, awaiting their confirmation."] = "Demande de synchronisation envoyé à %s"
+    L["Synching: %s"] = "Synchronisation: %s"
+    L["Synchronization completed"] = "Synchronisation terminée"
+    L["%s declined your sync request."] = "%s a refusé votre demande de synchronisation."
+    L["%s accepted your sync request."] = "%s a accepté votre demande de synchronisation"
+    L['Send request'] = "Envoyer la demande"
+    L["Enter the character you wish to sync with \n*Must be on the same realm/connected-realm"] = "Entrez le nom du personnage à synchroniser.\n*Vous devez être sur le même serveur."
+    L["Synchronize with"] = "Synchronisation avec"
 end

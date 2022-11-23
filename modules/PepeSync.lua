@@ -34,17 +34,17 @@ end
 
 -- Draw the export panel
 function PepeSync:DrawSyncRequestWindow()
-    local syncToWindow = StdUi:Window(UIParent, 420, 170, "Synchronize with")
+    local syncToWindow = StdUi:Window(UIParent, 420, 170, L["Synchronize with"])
     syncToWindow:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
     syncToWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
     syncToWindow:SetScript("OnMouseDown", function(self)
         self:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
     end)
 
-    local statusText = StdUi:Label(syncToWindow, "Enter the character you wish to sync with \n*Must be on the same realm/connected-realm", 14)
+    local statusText = StdUi:Label(syncToWindow, L["Enter the character you wish to sync with \n*Must be on the same realm/connected-realm"], 14)
     StdUi:GlueTop(statusText, syncToWindow, 0, -40)
 
-    local editBox = StdUi:SimpleEditBox(syncToWindow, 360, 24, "Loliee-Medivh")
+    local editBox = StdUi:SimpleEditBox(syncToWindow, 360, 24, nil)
     StdUi:GlueTop(editBox, syncToWindow, 0, -85, 'CENTER');
 
 
@@ -53,11 +53,17 @@ function PepeSync:DrawSyncRequestWindow()
     StdUi:GlueTop(logoTexture, logoFrame, 0, 0, "CENTER")
     StdUi:GlueBottom(logoFrame, syncToWindow, -10, 10, "RIGHT")
 
-    local sendRequestButton = StdUi:Button(syncToWindow, 100, 30, 'Send request')
+    local sendRequestButton = StdUi:Button(syncToWindow, 150, 30, L['Send request'])
     StdUi:GlueBottom(sendRequestButton, syncToWindow, 0, 10, 'CENTER')
     sendRequestButton:SetScript('OnClick', function()
-        PepeSync:SendRequest()
-        self.syncToWindow:Hide()
+        local name, realm = UnitFullName("player")
+        local player = name.."-"..realm
+        if (player == self.syncToWindow.editBox:GetText()) then
+            PepeGoldTracker:Print(L["You cannot synchronize with yourself."])
+        else
+            PepeSync:SendRequest()
+            self.syncToWindow:Hide()
+        end
     end)
 
     self.syncToWindow = syncToWindow
@@ -70,9 +76,9 @@ function PepeSync:OnSync(event, ...)
         if content == "request" then
             PepeSync:DrawConfirmationWindowRequestSync(sender)
         elseif (content == "declined") then
-            PepeGoldTracker:Print(sender.." declined your sync request.")
+            PepeGoldTracker:Print(L["%s declined your sync request."]:format(sender))
         elseif (content == "accepted") then
-            PepeGoldTracker:Print(sender.." accepted your sync request.")
+            PepeGoldTracker:Print(L["%s accepted your sync request."]:format(sender))
         end
     end
     if ((event == "CHAT_MSG_ADDON") and (prefix == "PepeSyncStart")) then
@@ -83,9 +89,9 @@ function PepeSync:OnSync(event, ...)
         local character = PepeGoldTracker:Split(content, ";")
         self.syncProgressWindow.progressBar:SetValue(character[7])
         if character[7] == character[8] then
-            self.syncProgressWindow.statusText:SetText("Synchronization completed ("..character[7].."/"..character[8]..")")
+            self.syncProgressWindow.statusText:SetText(L["Synchronization completed"].." ("..character[7].."/"..character[8]..")")
         else
-            self.syncProgressWindow.statusText:SetText("Synching: "..character[1].. " ("..character[7].."/"..character[8]..")")
+            self.syncProgressWindow.statusText:SetText(L["Synching: %s"]:format(character[1]).. " ("..character[7].."/"..character[8]..")")
         end
         if (PepeGoldTracker:CheckIfCharExist(character[1])) then
             PepeGoldTracker:UpdateCharFromSync(character)
@@ -99,7 +105,7 @@ end
 
 function PepeSync:SendRequest()
     local syncTarget = self.syncToWindow.editBox:GetText()
-    PepeGoldTracker:Print("Sync request has been sent to "..syncTarget..", awaiting their confirmation.")
+    PepeGoldTracker:Print(L["Sync request has been sent to %s, awaiting their confirmation."]:format(syncTarget))
     C_ChatInfo.SendAddonMessage("PepeSyncStatus", "request", "WHISPER", syncTarget)
 end
 
@@ -121,7 +127,7 @@ function PepeSync:DrawConfirmationWindowRequestSync(source)
                 success = C_ChatInfo.SendAddonMessage("PepeSyncStart", "1;"..#filteredChar, "WHISPER", source)
                 
                 if (success) then
-                    PepeGoldTracker:Print("Started synching. Do not close your game.")
+                    PepeGoldTracker:Print(L["Started synching. Do not close your game."])
                 end
 
                 for i, character in pairs(filteredChar) do
@@ -130,13 +136,13 @@ function PepeSync:DrawConfirmationWindowRequestSync(source)
                     if (character.guild) then
                         guild = character.guild
                     end
-                    preSync = preSync.."test"..i..";"..character.realm..";"..character.faction..";"..character.gold..";"..guild..";"..character.date..";"..i..";"..#filteredChar
+                    preSync = preSync..character.name..";"..character.realm..";"..character.faction..";"..character.gold..";"..guild..";"..character.date..";"..i..";"..#filteredChar
                     success = C_ChatInfo.SendAddonMessage("PepeSync", preSync, "WHISPER", source)
                     if (success) then
-                        PepeGoldTracker:Print("SyncData sent for: "..character.name)
+                        PepeGoldTracker:Print(L["Character data sent for: %s"]:format(character.name))
                     end
                 end
-                PepeGoldTracker:Print("Synchronization completed. You may now log off.")
+                PepeGoldTracker:Print(L["Synchronization completed. You may now log off."])
                 b.window:Hide()
             end
         },
@@ -149,7 +155,7 @@ function PepeSync:DrawConfirmationWindowRequestSync(source)
         },
     }
 
-    StdUi:Confirm("PepeSync", source.." is requesting to sync your data.", buttons, 2)
+    StdUi:Confirm("PepeSync", L["%s is requesting to sync your data."]:format(source), buttons, 2)
 end
 
 function PepeSync:OpenSyncProgressWindow(min, max)

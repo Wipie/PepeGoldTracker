@@ -9,6 +9,7 @@ L["- print the version number of the addon."] = true
 L["- open a window showing what realm you are logged on."] = true
 L["- toggle visibility of minimap button"] = true
 L["The current PepeGoldTracker version is: "] = true
+L["- open the options window."] = true
 
 --[[   
     General
@@ -44,6 +45,10 @@ L["Show minimap icon"] = true
 L["Whether or not to show the minimap icon."]  = true
 L["Show current realm window"] = true
 L["Auto-open the current realm window for character that are level 10 and under"] = true
+L["Multi-account synching"] = true
+L["Synchronization Options"] = true
+L["Note: this feature is still experimental and will only sync characters and not guild."] = true
+L["Open sync window"] = true
 
 --[[
     Minimap
@@ -91,3 +96,21 @@ L["Only show characters that are on this realm."] = true
 L["Character name"] = true
 L["Character "] = true
 L["Delete character"] = true
+
+
+--[[
+    Synchronization
+]]
+L["You cannot synchronize with yourself."] = true
+L["%s is requesting to sync your data."] = true
+L["Synchronization completed. You may now log off."] = true
+L["Character data sent for: %s"] = true
+L["Started synching. Do not close your game."] = true
+L["Sync request has been sent to %s, awaiting their confirmation."] = true
+L["Synching: %s"] = true
+L["Synchronization completed"] = true
+L["%s declined your sync request."] = true
+L["%s accepted your sync request."] = true
+L['Send request'] = true
+L["Enter the character you wish to sync with \n*Must be on the same realm/connected-realm"] = true
+L["Synchronize with"] = true
