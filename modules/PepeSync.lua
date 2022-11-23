@@ -46,7 +46,7 @@ function PepeSync:DrawSyncRequestWindow()
 
     local editBox = StdUi:SimpleEditBox(syncToWindow, 360, 24, nil)
     StdUi:GlueTop(editBox, syncToWindow, 0, -85, 'CENTER');
-
+    editBox:SetFocus()
 
     local logoFrame = StdUi:Frame(syncToWindow, 32, 32)
     local logoTexture = StdUi:Texture(logoFrame, 32, 32, [=[Interface\Addons\PepeGoldTracker\media\PepeAlone.tga]=])

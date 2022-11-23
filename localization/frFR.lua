@@ -101,8 +101,8 @@ if L then
         Synchronization
     ]]
     L["You cannot synchronize with yourself."] = "Vous ne pouvez pas faire de synchronisation avec vous-même."
-    L["%s is requesting to sync your data."] = "%s souhaite synchronisé vos données."
-    L["Synchronization completed. You may now log off."] = "Synchronisation terminée. Vous pouvez désormais vous déconnectez."
+    L["%s is requesting to sync your data."] = "%s souhaite synchroniser vos données."
+    L["Synchronization completed. You may now log off."] = "Synchronisation terminée. Vous pouvez désormais vous déconnecter."
     L["Character data sent for: %s"] = "Données de personnage envoyé pour: %s"
     L["Started synching. Do not close your game."] = "Synchronisation commencée. Ne fermez pas votre jeu."
     L["Sync request has been sent to %s, awaiting their confirmation."] = "Demande de synchronisation envoyé à %s"
