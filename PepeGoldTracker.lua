@@ -444,7 +444,7 @@ function PepeGoldTracker:formatGold(amount, onlyGold)
     if (onlyGold) then
         if gold > 0 then
             -- Todo: Implementing option to change the BreakUpLargeNumber to 1,234,567 instead of 1234567
-            return format('%s%s ', gold, goldIcon)
+            return format('%s%s ', BreakUpLargeNumbers(gold), goldIcon)
         elseif silver > 0 then
             return format('%d%s %d%s', silver, silverIcon, copper, copperIcon)
         else
@@ -453,7 +453,7 @@ function PepeGoldTracker:formatGold(amount, onlyGold)
     else
 
         if gold > 0 then
-            return format('%s%s %d%s %d%s', gold, goldIcon, silver, silverIcon, copper, copperIcon)
+            return format('%s%s %d%s %d%s', BreakUpLargeNumbers(gold), goldIcon, silver, silverIcon, copper, copperIcon)
         elseif silver > 0 then
             return format('%d%s %d%s', silver, silverIcon, copper, copperIcon)
         else
@@ -478,7 +478,7 @@ function PepeGoldTracker:getGuildIndexByName (table, name, realm)
     end
 end
 
-function PepeGoldTracker:BreakUpLargeNumber(amount)
+function PepeGoldTracker:BreakUpLargeNumbers(amount)
     amount = tostring(math.floor(amount));
     local newDisplay = "";
     local strlen = amount:len();
