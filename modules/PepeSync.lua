@@ -44,7 +44,7 @@ function PepeSync:DrawSyncRequestWindow()
     local statusText = StdUi:Label(syncToWindow, "Enter the character you wish to sync with \n*Must be on the same realm/connected-realm", 14)
     StdUi:GlueTop(statusText, syncToWindow, 0, -40)
 
-    local editBox = StdUi:SimpleEditBox(syncToWindow, 360, 24, "Cynnmo-Medivh")
+    local editBox = StdUi:SimpleEditBox(syncToWindow, 360, 24, "Loliee-Medivh")
     StdUi:GlueTop(editBox, syncToWindow, 0, -85, 'CENTER');
 
 
@@ -83,7 +83,7 @@ function PepeSync:OnSync(event, ...)
         local character = PepeGoldTracker:Split(content, ";")
         self.syncProgressWindow.progressBar:SetValue(character[7])
         if character[7] == character[8] then
-            self.syncProgressWindow.statusText:SetText("Synchronization completed")
+            self.syncProgressWindow.statusText:SetText("Synchronization completed ("..character[7].."/"..character[8]..")")
         else
             self.syncProgressWindow.statusText:SetText("Synching: "..character[1].. " ("..character[7].."/"..character[8]..")")
         end
@@ -108,18 +108,29 @@ function PepeSync:DrawConfirmationWindowRequestSync(source)
         yes = {
             text = L["Yes"],
             onClick = function(b)
+                local db = PepeGoldTracker.db.global.characters
+                local filteredChar = {}
+                for _, char in pairs(db) do
+                    if (char.syncIcon == 0) then
+                        table.insert(filteredChar, char)
+                    end
+                end
+
+
                 C_ChatInfo.SendAddonMessage("PepeSyncStatus", "accepted", "WHISPER", source)
-                success = C_ChatInfo.SendAddonMessage("PepeSyncStart", "1;"..#PepeGoldTracker.db.global.characters, "WHISPER", source)
+                success = C_ChatInfo.SendAddonMessage("PepeSyncStart", "1;"..#filteredChar, "WHISPER", source)
+                
                 if (success) then
                     PepeGoldTracker:Print("Started synching. Do not close your game.")
                 end
-                for i, character in pairs(PepeGoldTracker.db.global.characters) do
+
+                for i, character in pairs(filteredChar) do
                     local preSync = ""
                     local guild = ""
                     if (character.guild) then
                         guild = character.guild
                     end
-                    preSync = preSync.."test"..i..";"..character.realm..";"..character.faction..";"..character.gold..";"..guild..";"..character.date..";"..i..";"..#PepeGoldTracker.db.global.characters
+                    preSync = preSync.."test"..i..";"..character.realm..";"..character.faction..";"..character.gold..";"..guild..";"..character.date..";"..i..";"..#filteredChar
                     success = C_ChatInfo.SendAddonMessage("PepeSync", preSync, "WHISPER", source)
                     if (success) then
                         PepeGoldTracker:Print("SyncData sent for: "..character.name)
