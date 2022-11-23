@@ -165,7 +165,7 @@ function PepeCharacterViewer:DrawSearchResultsTable()
                 OnEnter = function(table, cellFrame, rowFrame, rowData, columnData, rowIndex)
                     if rowData.syncIcon == 625757 then
                         GameTooltip:SetOwner(cellFrame)
-                        GameTooltip:SetText("This character has been synched")
+                        GameTooltip:SetText(L["Synched character"])
                         GameTooltip:Show()
                     end
                 end,
@@ -222,6 +222,7 @@ function PepeCharacterViewer:DrawSearchResultsTable()
             width = 32,
             align = "CENTER",
             index = "deleteButton",
+            sortable = false,
             format = "icon",
             texture = true,
             events = {
@@ -314,7 +315,7 @@ function PepeCharacterViewer:DrawConfirmationWindow()
                 local db = PepeGoldTracker.db.global.characters
                 table.remove(db, self.id)
                 PepeCharacterViewer:SearchChar("")
-                PepeGoldTracker:Print(L["Character "]..self.name..L[" deleted successfully"])
+                PepeGoldTracker:Print(L["Character %s deleted successfully"]:format(self.name))
                 b.window:Hide()
                 PepeCharacterViewer:Toggle()
             end
@@ -328,7 +329,7 @@ function PepeCharacterViewer:DrawConfirmationWindow()
         },
     }
 
-    StdUi:Confirm(L["Delete character"], L["Are you sure you want to delete "]..self.name, buttons, 1)
+    StdUi:Confirm(L["Delete character"], L["Are you sure you want to delete %s"]:format(self.name), buttons, 1)
 end
 
 function PepeCharacterViewer:ApplyDefaultSort(tableToSort)
@@ -360,7 +361,7 @@ function PepeCharacterViewer:UpdateResultsText()
         self.characterWindow.resultsLabel:SetText(PepeGoldTracker:formatGold(totalGold, true))
         self.characterWindow.resultsLabel:Show()
 
-        self.characterWindow.countLabel:SetText(L["Current results: "]..#self.currentView)
+        self.characterWindow.countLabel:SetText(L["Current results: %s"]:format(#self.currentView))
         self.characterWindow.countLabel:Show()
     else
         self.characterWindow.resultsLabel:Hide()

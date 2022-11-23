@@ -280,7 +280,7 @@ function PepeGuildsViewer:SearchGuild(filter)
                 table.insert(filteredResults, guild)
             end
         elseif (guild.name == nil or guild.realm == nil or guild.gold == nil or guild.faction == nil) then
-            PepeGoldTracker:Print(L["Detecting a bugged guild ID: "]..index..L[". The guild will be deleted make sure to confirm information while exporting!"])
+            PepeGoldTracker:Print(L["Detecting a bugged guild ID: %s. The guild will be deleted make sure to confirm information while exporting!"]:format(index))
             table.remove(allResults, index)
         end
     end
@@ -323,7 +323,7 @@ function PepeGuildsViewer:UpdateResultsText()
         self.guildWindow.resultsLabel:SetText(PepeGoldTracker:formatGold(totalGold, true))
         self.guildWindow.resultsLabel:Show()
 
-        self.guildWindow.countLabel:SetText(L["Current results: "] .. tostring(#self.currentView))
+        self.guildWindow.countLabel:SetText(L["Current results: %s"]:format(tostring(#self.currentView)))
         self.guildWindow.countLabel:Show()
     else
         self.guildWindow.resultsLabel:Hide()
@@ -339,7 +339,7 @@ function PepeGuildsViewer:DrawConfirmationWindow()
                 local db = PepeGoldTracker.db.global.guilds
                 table.remove(db, self.id)
                 PepeGuildsViewer:SearchGuild("")
-                PepeGoldTracker:Print(L["Guild "]..self.name..L[" deleted successfully"])
+                PepeGoldTracker:Print(L["Guild %s deleted successfully"]:format(self.name))
                 b.window:Hide()
                 PepeGuildsViewer:Toggle()
             end
@@ -353,7 +353,7 @@ function PepeGuildsViewer:DrawConfirmationWindow()
         },
     }
 
-    StdUi:Confirm(L["Delete guild"], L["Are you sure you want to delete "]..self.name, buttons, 2)
+    StdUi:Confirm(L["Delete guild"], L["Are you sure you want to delete %s"]:format(self.name), buttons, 2)
 end
 
 function PepeGuildsViewer:DrawConfirmationWindowAllGuilds()

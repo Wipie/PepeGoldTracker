@@ -34,7 +34,7 @@ end
 
 -- Draw the export panel
 function PepeSync:DrawSyncRequestWindow()
-    local syncToWindow = StdUi:Window(UIParent, 420, 170, L["Synchronize with"])
+    local syncToWindow = StdUi:Window(UIParent, 420, 170, L["Synchronization request"])
     syncToWindow:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
     syncToWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
     syncToWindow:SetScript("OnMouseDown", function(self)
@@ -155,7 +155,7 @@ function PepeSync:DrawConfirmationWindowRequestSync(source)
         },
     }
 
-    StdUi:Confirm("PepeSync", L["%s is requesting to sync your data."]:format(source), buttons, 2)
+    StdUi:Confirm(L["Pending request"], L["%s is requesting to sync your data."]:format(source), buttons, 2)
 end
 
 function PepeSync:OpenSyncProgressWindow(min, max)
@@ -177,7 +177,7 @@ function PepeSync:OpenProgressPanel(min, max)
 end
 
 function PepeSync:DrawSyncProgressWindow(min, max)
-    local syncProgressWindow = StdUi:Window(UIParent, 350, 150, 'PepeSync');
+    local syncProgressWindow = StdUi:Window(UIParent, 350, 150, L['Synchronization']);
     syncProgressWindow:SetPoint('CENTER');
 
 

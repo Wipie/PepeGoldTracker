@@ -31,7 +31,7 @@ function SlashCmdList.pgt(command)
     elseif (command == 'guild') then
         PepeGoldTracker.guildsViewer:OpenPanel()
     elseif (command == 'version') then
-        PepeGoldTracker:Print(PepeGoldTracker.colorString ..L["The current PepeGoldTracker version is: "].. GetAddOnMetadata("PepeGoldTracker", "Version"))
+        PepeGoldTracker:Print(PepeGoldTracker.colorString ..L["The current PepeGoldTracker version is: %s"]:format(GetAddOnMetadata("PepeGoldTracker", "Version")))
     elseif (command == 'options') then
         InterfaceOptionsFrame_OpenToCategory("PepeGoldTracker");
     elseif (command == 'sync') then

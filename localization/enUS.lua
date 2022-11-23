@@ -8,7 +8,7 @@ L["- open guild window"] = true
 L["- print the version number of the addon."] = true
 L["- open a window showing what realm you are logged on."] = true
 L["- toggle visibility of minimap button"] = true
-L["The current PepeGoldTracker version is: "] = true
+L["The current PepeGoldTracker version is: %s"] = true
 L["- open the options window."] = true
 
 --[[   
@@ -26,14 +26,13 @@ L["Faction"] = true
 L["Gold"] = true
 L["Last update"] = true
 L["No results found."] = true
-L["Current results: "] = true
+L["Current results: %s"] = true
 L["Yes"] = true
 L["No"] = true
-L["Are you sure you want to delete "] = true
+L["Are you sure you want to delete %s"] = true
 L["Close"] = true
 L["Search.. name, realm, faction, date"] = true
 L["Guild name"] = true
-L[" deleted successfully"] = true
 
 --[[
     Options
@@ -66,16 +65,15 @@ L["Connected realm:"] = true
 --[[
     Guild Viewer Window
 ]]
-L["Guild overview"] = true
+L["Guilds overview"] = true
 L["Purge DB"] = true
 L["Clear the guild database.\nThis effect is permanent and cannot be undone."] = true
 L["Only show guilds that are on this realm."] = true
 L["Delete guild"] = true
 L["All guilds have been successfully deleted."] = true
 L["Are you sure you want to delete ALL guilds?"] = true
-L["Guild "] = true
-L["Detecting a bugged guild ID: "] = true
-L[". The guild will be deleted make sure to confirm information while exporting!"] = true
+L["Guild %s deleted successfully"] = true
+L["Detecting a bugged guild ID: %s. The guild will be deleted make sure to confirm information while exporting!"] = true
 
 
 --[[
@@ -94,8 +92,9 @@ L["Export characters data"] = true
 L["Character overview"] = true
 L["Only show characters that are on this realm."] = true
 L["Character name"] = true
-L["Character "] = true
+L["Character %s deleted successfully"] = true
 L["Delete character"] = true
+L["Synched character"] = true
 
 
 --[[
@@ -113,4 +112,6 @@ L["%s declined your sync request."] = true
 L["%s accepted your sync request."] = true
 L['Send request'] = true
 L["Enter the character you wish to sync with \n*Must be on the same realm/connected-realm"] = true
-L["Synchronize with"] = true
+L["Synchronization request"] = true
+L["Pending request"] = true
+L['Synchronization'] = true

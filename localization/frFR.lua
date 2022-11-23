@@ -10,7 +10,7 @@ if L then
     L["- print the version number of the addon."] = "- affiche la version de l'addon"
     L["- open a window showing what realm you are logged on."] = "- ouvre un panneau affichant le serveur ou vous êtes actuellement connecté"
     L["- toggle visibility of minimap button"] = "- permet d'activer ou désactivé le boutton de la minimap"
-    L["The current PepeGoldTracker version is: "] = "La version actuelle de PepeGoldTracker est: "
+    L["The current PepeGoldTracker version is: %s"] = "La version actuelle de PepeGoldTracker est: %s"
     L["- open the options window."] = "- ouvre la fenêtre des options"
 
     --[[
@@ -28,14 +28,13 @@ if L then
     L["Gold"] = "Or"
     L["Last update"] = "Dernière mise à jour"
     L["No results found."] = "Aucun résultat trouvé."
-    L["Current results: "] = "Résultats actuel: "
+    L["Current results: %s"] = "Résultats actuel: %s"
     L["Yes"] = "Oui"
     L["No"] = "Non"
-    L["Are you sure you want to delete "] = "Êtes-vous sûr de vouloir supprimer "
+    L["Are you sure you want to delete %s"] = "Êtes-vous sûr de vouloir supprimer %s"
     L["Close"] = "Fermer"
     L["Search.. name, realm, faction, date"] = "Recherche.. nom, serveur, faction, date"
     L["Guild name"] = "Nom de guilde"
-    L[" deleted successfully"] = " supprimé avec succès"
 
     --[[
         Options
@@ -68,16 +67,15 @@ if L then
     --[[
         Guild Viewer Window
     ]]
-    L["Guild overview"] = "Suivi des guildes"
+    L["Guilds overview"] = "Suivi des guildes"
     L["Purge DB"] = "Purger BD"
     L["Clear the guild database.\nThis effect is permanent and cannot be undone."] = "Efface la base de donnée des guildes.\nL'effet est permanent et ne peut être annulé"
     L["Only show guilds that are on this realm."] = "Affiche seulement les guildes qui sont sur ce serveur."
     L["Delete guild"] = "Supression de guilde"
     L["All guilds have been successfully deleted."] = "Toutes les guildes ont étés supprimées avec succès"
     L["Are you sure you want to delete ALL guilds?"] = "Êtes-vous sûr de vouloir supprimer TOUTES les guildes?"
-    L["Guild "] = "Guilde "
-    L["Detecting a bugged guild ID: "] = "Détection d'une guilde bug ID: "
-    L[". The guild will be deleted make sure to confirm information while exporting!"] = ". La guilde sera supprimée. Veuillez vérifié vos informations lors de l'export!"
+    L["Guild %s deleted successfully"] = "Guilde %s supprimée avec succès"
+    L["Detecting a bugged guild ID: %s. The guild will be deleted make sure to confirm information while exporting!"] = "Détection d'une guilde bug ID: %s. La guilde sera supprimée. Veuillez vérifié vos informations lors de l'export!"
 
     --[[
         Export guild winodw
@@ -95,8 +93,9 @@ if L then
     L["Character overview"] = "Suivi des personnages"
     L["Only show characters that are on this realm."] = "Affiche seulement les personnes qui sont sur ce serveur"
     L["Character name"] = "Nom du personnage"
-    L["Character "] = "Personnage "
+    L["Character %s deleted successfully"] = "Personnage %s supprimé avec succès"
     L["Delete character"] = "Suppression de personnage"
+    L["Synched character"] = "Personnage synchronisé"
 
     --[[
         Synchronization
@@ -113,5 +112,7 @@ if L then
     L["%s accepted your sync request."] = "%s a accepté votre demande de synchronisation"
     L['Send request'] = "Envoyer la demande"
     L["Enter the character you wish to sync with \n*Must be on the same realm/connected-realm"] = "Entrez le nom du personnage à synchroniser.\n*Vous devez être sur le même serveur."
-    L["Synchronize with"] = "Synchronisation avec"
+    L["Synchronization request"] = "Demande de synchronisation"
+    L["Pending request"] = "Requête en attente"
+    L['Synchronization'] = "Synchronisation"
 end
