@@ -34,6 +34,8 @@ function SlashCmdList.pgt(command)
         PepeGoldTracker:Print(PepeGoldTracker.colorString ..L["The current PepeGoldTracker version is: "].. GetAddOnMetadata("PepeGoldTracker", "Version"))
     elseif (command == 'options') then
         InterfaceOptionsFrame_OpenToCategory("PepeGoldTracker");
+    elseif (command == 'sync') then
+        PepeGoldTracker.syncModule:Toggle()
     elseif (command == 'realm') then
         PepeGoldTracker.currentRealm:Toggle()
     elseif (command == 'minimap') then
@@ -244,7 +246,8 @@ function PepeGoldTracker:RegisterChar()
         faction = select(1, UnitFactionGroup("player")),
         gold = GetMoney("player"),
         date = date,
-        guild = "" -- Defaulting to empty to avoid nil due since nil is breaking the sort
+        guild = "", -- Defaulting to empty to avoid nil due since nil is breaking the sort
+        syncIcon = "",
     }
     if not (PepeGoldTracker:CheckIfCharExist()) then
         PepeGoldTracker.db.global.characters[#PepeGoldTracker.db.global.characters + 1] = self.character
@@ -261,11 +264,11 @@ function PepeGoldTracker:RegisterCharFromSync(character)
         faction = character[3],
         gold = tonumber(character[4]),
         date = date,
+        syncIcon = 625757,
         guild = character[5] and character[5] or "" -- Defaulting to empty to avoid nil due since nil is breaking the sort
     }
     if not (PepeGoldTracker:CheckIfCharExist(player)) then
         PepeGoldTracker.db.global.characters[#PepeGoldTracker.db.global.characters + 1] = self.character
-        PepeGoldTracker:Print(L["Character synched from WoW 2 successfully."])
     end
 end
 
