@@ -155,6 +155,26 @@ function PepeCharacterViewer:DrawSearchResultsTable()
 
     local cols = {
         {
+            name = "",
+            width = 24,
+            align = "CENTER",
+            index = "syncIcon",
+            format = "icon",
+            texture = true,
+            events = {
+                OnEnter = function(table, cellFrame, rowFrame, rowData, columnData, rowIndex)
+                    if rowData.syncIcon == 625757 then
+                        GameTooltip:SetOwner(cellFrame)
+                        GameTooltip:SetText("This character has been synched")
+                        GameTooltip:Show()
+                    end
+                end,
+                OnLeave = function(rowFrame, cellFrame)
+                    GameTooltip:Hide()
+                end
+            },
+        },
+        {
             name = L["Character name"],
             width = 150,
             align = "MIDDLE",
@@ -270,6 +290,9 @@ function PepeCharacterViewer:SearchChar(filter)
                 or (character.date and character.date:lower():find(searchFilter, 1, true))
                 or (character.name and character.name:lower():find(searchFilter, 1, true)))) then
             character.deleteButton = [=[Interface\Buttons\UI-GroupLoot-Pass-Down]=]
+            if not (character.syncIcon) then
+                character.syncIcon = ""
+            end
             character.id = index
             table.insert(filteredResults, character)
         end
