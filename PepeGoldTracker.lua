@@ -443,7 +443,8 @@ function PepeGoldTracker:formatGold(amount, onlyGold)
 
     if (onlyGold) then
         if gold > 0 then
-            return format('%s%s ', PepeGoldTracker:BreakUpLargeNumber(gold), goldIcon)
+            -- Todo: Implementing option to change the BreakUpLargeNumber to 1,234,567 instead of 1234567
+            return format('%s%s ', BreakUpLargeNumber(gold), goldIcon)
         elseif silver > 0 then
             return format('%d%s %d%s', silver, silverIcon, copper, copperIcon)
         else
