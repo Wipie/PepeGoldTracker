@@ -291,7 +291,7 @@ function PepeCharacterViewer:SearchChar(filter)
                 or (character.name and character.name:lower():find(searchFilter, 1, true)))) then
             character.deleteButton = [=[Interface\Buttons\UI-GroupLoot-Pass-Down]=]
             if not (character.syncIcon) then
-                character.syncIcon = ""
+                character.syncIcon = 0
             end
             character.id = index
             table.insert(filteredResults, character)

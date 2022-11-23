@@ -247,7 +247,7 @@ function PepeGoldTracker:RegisterChar()
         gold = GetMoney("player"),
         date = date,
         guild = "", -- Defaulting to empty to avoid nil due since nil is breaking the sort
-        syncIcon = "",
+        syncIcon = 0,
     }
     if not (PepeGoldTracker:CheckIfCharExist()) then
         PepeGoldTracker.db.global.characters[#PepeGoldTracker.db.global.characters + 1] = self.character
