@@ -8,6 +8,8 @@ PepeCharacterViewer.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
 PepeCharacterViewer.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 PepeCharacterViewer.IsWrath = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_WRATH_CLASSIC
 
+PepeCharacterViewer.format = ""
+
 function PepeCharacterViewer:OnEnable()
     self.configDB = PepeGoldTracker.db.char
     self:RegisterEvent("PLAYER_MONEY", "OnEvent")
@@ -141,17 +143,16 @@ function PepeCharacterViewer:OnEvent(event)
     end
 end
 
+function PepeCharacterViewer:UpdateSearchTable()
+    if (self.characterWindow) then
+        self.characterWindow.searchResults:Hide()
+        PepeCharacterViewer:DrawSearchResultsTable()
+        PepeCharacterViewer:SearchChar("")
+    end
+end
+
 function PepeCharacterViewer:DrawSearchResultsTable()
     local characterWindow = self.characterWindow
-
-    local function showTooltip(frame, show, text)
-        if show then
-            GameTooltip:SetOwner(frame);
-            GameTooltip:SetText(text)
-        else
-            GameTooltip:Hide();
-        end
-    end
 
     local cols = {
         {
@@ -200,7 +201,7 @@ function PepeCharacterViewer:DrawSearchResultsTable()
             width = 100,
             align = "LEFT",
             index = "gold",
-            format = "money",
+            format = PepeGoldTracker.db.global.moneyFormat,
         },
         {
             name = L["Guild name"],
@@ -263,6 +264,7 @@ function PepeCharacterViewer:DrawSearchResultsTable()
 
     characterWindow.stateLabel = StdUi:Label(characterWindow.searchResults, L["No results found."])
     StdUi:GlueTop(characterWindow.stateLabel, characterWindow.searchResults, 0, -40, "CENTER")
+    self.characterWindow.searchResults =  characterWindow.searchResults
 end
 
 function PepeCharacterViewer:UpdateStateText()

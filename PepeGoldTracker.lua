@@ -112,6 +112,11 @@ function PepeGoldTracker:MigrateOldDatabaseSchema()
     if (not self.db.global.autoOpenCurrentRealm) then
         self.db.global.autoOpenCurrentRealm = { ["hide"] = false }
     end
+
+    if (not self.db.global.moneyFormat) then
+        self.db.global.moneyFormat = "money"
+    end
+
 end
 
 function PepeGoldTracker:DrawMinimapButton()
@@ -223,6 +228,24 @@ function PepeGoldTracker:SetupOptions()
                             HideUIPanel(SettingsPanel)
                             PepeGoldTracker.syncModule:Toggle()
                         end,
+                    },
+                    selectBox = {
+                        type = "select",
+                        name = "TEST",
+                        style = "dropdown",
+                        values = {
+                            money = "Regular",
+                            moneyShort = "Regular (No copper)",
+
+                        },
+                        order = 2,
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.moneyFormat = val
+                            PepeGoldTracker.charactersViewer:UpdateSearchTable()
+                        end,
+                        get = function(info)
+                            return PepeGoldTracker.db.global.moneyFormat
+                        end
                     },
                 }
             },
