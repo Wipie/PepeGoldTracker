@@ -207,6 +207,43 @@ function PepeGoldTracker:SetupOptions()
                             return not PepeGoldTracker.db.global.autoOpenCurrentRealm.hide
                         end
                     },
+                    tableOptions = {
+                        type = "group",
+                        order = 5,
+                        name = "Overview table options",
+                        inline = true,
+                        args = {
+                            desc3 = {
+                                order = 1,
+                                type = "description",
+                                name = "This section allow you a bit of customization for the tables of the overviews panels",
+                            },
+                            moneyFormat = {
+                                type = "select",
+                                name = "Gold format display",
+                                style = "dropdown",
+                                order = 6,
+                                width = 1.3,
+                                values = {
+                                    money = "Blizzard",
+                                    moneyShort = "Blizzard short (Only show gold)",
+                                    moneySpace = "Spaced (2 222g 22s 22c)",
+                                    moneySpacedShort = "Spaced short(2 222g)",
+                                    moneyWithComa = "Coma (2,222g 22s 22c)",
+                                    moneyWithComaShort = "Coma short (2,222g)",
+                                    moneyWithoutSpace = "Packed (2222g 22s 22c)",
+                                    moneyWithoutSpaceShort = "Packed short (2222g)"
+                                },
+                                set = function(info, val)
+                                    PepeGoldTracker.db.global.moneyFormat = val
+                                    PepeGoldTracker.charactersViewer:UpdateSearchTable()
+                                end,
+                                get = function(info)
+                                    return PepeGoldTracker.db.global.moneyFormat
+                                end
+                            },
+                        }
+                    },
                 }
             },
             synchronization = {
@@ -228,24 +265,6 @@ function PepeGoldTracker:SetupOptions()
                             HideUIPanel(SettingsPanel)
                             PepeGoldTracker.syncModule:Toggle()
                         end,
-                    },
-                    selectBox = {
-                        type = "select",
-                        name = "TEST",
-                        style = "dropdown",
-                        values = {
-                            money = "Regular",
-                            moneyShort = "Regular (No copper)",
-
-                        },
-                        order = 2,
-                        set = function(info, val)
-                            PepeGoldTracker.db.global.moneyFormat = val
-                            PepeGoldTracker.charactersViewer:UpdateSearchTable()
-                        end,
-                        get = function(info)
-                            return PepeGoldTracker.db.global.moneyFormat
-                        end
                     },
                 }
             },
