@@ -117,6 +117,22 @@ function PepeGoldTracker:MigrateOldDatabaseSchema()
         self.db.global.moneyFormat = "money"
     end
 
+    if (not self.db.global.syncIcon) then
+        self.db.global.syncIcon = { ["hide"] = true }
+    end
+
+    if (not self.db.global.hideColumnCharacters) then
+        self.db.global.hideColumnCharacters = {
+            ["icon"] = false,
+            ["name"] = false,
+            ["realm"] = false,
+            ["faction"] = false,
+            ["gold"] = false,
+            ["guild"] = false,
+            ["update"] = false
+        }
+    end
+
 end
 
 function PepeGoldTracker:DrawMinimapButton()
@@ -240,6 +256,28 @@ function PepeGoldTracker:SetupOptions()
                                 end,
                                 get = function(info)
                                     return PepeGoldTracker.db.global.moneyFormat
+                                end
+                            },
+                            hideColumnCharacters = {
+                                type = "multiselect",
+                                name = "Select wich columns you want to hide",
+                                order = 7,
+                                width = 1.3,
+                                values = {
+                                    name = "Name",
+                                    faction = "Faction",
+                                    icon = "Sync icon",
+                                    gold = "Gold",
+                                    guild = "Guild",
+                                    realm = "Realm",
+                                    update = "Last update",
+                                },
+                                set = function(info, val)
+                                    PepeGoldTracker.db.global.hideColumnCharacters[val] = not PepeGoldTracker.db.global.hideColumnCharacters[val]
+                                    PepeGoldTracker.charactersViewer:UpdateSearchTable()
+                                end,
+                                get = function(info, val)
+                                    return PepeGoldTracker.db.global.hideColumnCharacters[val]
                                 end
                             },
                         }
