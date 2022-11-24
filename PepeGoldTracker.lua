@@ -227,12 +227,12 @@ function PepeGoldTracker:SetupOptions()
                                 values = {
                                     money = "Blizzard",
                                     moneyShort = "Blizzard short (Only show gold)",
-                                    moneySpace = "Spaced (2 222g 22s 22c)",
-                                    moneySpacedShort = "Spaced short(2 222g)",
+                                    moneyWithSpace = "Spaced (2 222g 22s 22c)",
+                                    moneyWithSpaceShort = "Spaced short(2 222g)",
                                     moneyWithComa = "Coma (2,222g 22s 22c)",
                                     moneyWithComaShort = "Coma short (2,222g)",
-                                    moneyWithoutSpace = "Packed (2222g 22s 22c)",
-                                    moneyWithoutSpaceShort = "Packed short (2222g)"
+                                    --moneyWithoutSpace = "Packed (2222g 22s 22c)",
+                                    --moneyWithoutSpaceShort = "Packed short (2222g)"
                                 },
                                 set = function(info, val)
                                     PepeGoldTracker.db.global.moneyFormat = val
