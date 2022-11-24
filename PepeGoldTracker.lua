@@ -117,10 +117,6 @@ function PepeGoldTracker:MigrateOldDatabaseSchema()
         self.db.global.moneyFormat = "money"
     end
 
-    if (not self.db.global.syncIcon) then
-        self.db.global.syncIcon = { ["hide"] = true }
-    end
-
     if (not self.db.global.hideColumnCharacters) then
         self.db.global.hideColumnCharacters = {
             ["icon"] = false,
