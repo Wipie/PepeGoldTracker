@@ -463,10 +463,22 @@ local methods = {
 			if type(format) == 'function' then
 				cellFrame.text:SetText(format(value, rowData, columnData));
 			elseif format == 'money' then
-				value = table.stdUi.Util.formatMoney(value);
+				value = table.stdUi.Util.formatMoney(value, false);
 				cellFrame.text:SetText(value);
 			elseif format == 'moneyShort' then
 				value = table.stdUi.Util.formatMoney(value, true);
+				cellFrame.text:SetText(value);
+			elseif format == 'moneyWithComa' then
+				value = table.stdUi.Util.formatMoneyWithComa(value, false);
+				cellFrame.text:SetText(value);
+			elseif format == 'moneyWithComaShort' then
+				value = table.stdUi.Util.formatMoneyWithComa(value, true);
+				cellFrame.text:SetText(value);
+			elseif format == 'moneyWithSpace' then
+				value = table.stdUi.Util.formatMoneyWithSpace(value, false);
+				cellFrame.text:SetText(value);
+			elseif format == 'moneyWithSpaceShort' then
+				value = table.stdUi.Util.formatMoneyWithSpace(value, true);
 				cellFrame.text:SetText(value);
 			elseif format == 'time' then
 				value = table.stdUi.Util.formatTime(value);
@@ -525,7 +537,6 @@ local methods = {
 
 	Refresh           = function(self)
 		self:Update(#self.filtered, self.numberOfRows, self.rowHeight);
-
 		local o = self:GetOffset();
 		self.offset = o;
 

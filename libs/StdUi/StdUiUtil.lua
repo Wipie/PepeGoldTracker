@@ -31,7 +31,6 @@ function StdUi:MarkAsValid(frame, valid)
 		frame.origBackdropBorderColor = { frame:GetBackdropBorderColor() };
 	end
 end
-
 StdUi.Util = {
 	--- @param self EditBox
 	editBoxValidator    = function(self)
@@ -155,7 +154,7 @@ StdUi.Util = {
 		return total, gold, silver, copper, isValid;
 	end,
 
-	formatMoney         = function(money, excludeCopper)
+	formatMoney         = function(money, short)
 		if type(money) ~= 'number' then
 			return money;
 		end
@@ -179,7 +178,87 @@ StdUi.Util = {
 			output = format('%s%s%02i%s ', output, silverColor, silver, '|rs');
 		end
 
-		if not excludeCopper then
+		if not short then
+			output = format('%s%s%02i%s ', output, copperColor, copper, '|rc');
+		end
+
+		return output:trim();
+	end,
+
+	formatMoneyWithComa        = function(money, short)
+
+		if type(money) ~= 'number' then
+			return money;
+		end
+
+		money = tonumber(money);
+		local goldColor = '|cfffff209';
+		local silverColor = '|cff7b7b7a';
+		local copperColor = '|cffac7248';
+
+		local gold = floor(money / COPPER_PER_GOLD);
+		local silver = floor((money - (gold * COPPER_PER_GOLD)) / COPPER_PER_SILVER);
+		local copper = floor(money % COPPER_PER_SILVER);
+
+		gold = tostring(math.floor(gold));
+		local newDisplay = "";
+		local strlen = gold:len();
+		for i=4, strlen, 3 do
+			newDisplay = ","..gold:sub(-(i - 1), -(i - 3))..newDisplay;
+		end
+		newDisplay = gold:sub(1, (strlen % 3 == 0) and 3 or (strlen % 3))..newDisplay
+
+		local output = '';
+
+		if tonumber(gold) > 0 then
+			output = format('%s%s%s ', goldColor, newDisplay, '|rg');
+		end
+
+		if (not short and (tonumber(gold) > 0 or silver > 0)) then
+			output = format('%s%s%02i%s ', output, silverColor, silver, '|rs');
+		end
+
+		if not short then
+			output = format('%s%s%02i%s ', output, copperColor, copper, '|rc');
+		end
+
+		return output:trim();
+	end,
+
+	formatMoneyWithSpace        = function(money, short)
+
+		if type(money) ~= 'number' then
+			return money;
+		end
+
+		money = tonumber(money);
+		local goldColor = '|cfffff209';
+		local silverColor = '|cff7b7b7a';
+		local copperColor = '|cffac7248';
+
+		local gold = floor(money / COPPER_PER_GOLD);
+		local silver = floor((money - (gold * COPPER_PER_GOLD)) / COPPER_PER_SILVER);
+		local copper = floor(money % COPPER_PER_SILVER);
+
+		gold = tostring(math.floor(gold));
+		local newDisplay = "";
+		local strlen = gold:len();
+		for i=4, strlen, 3 do
+			newDisplay = " "..gold:sub(-(i - 1), -(i - 3))..newDisplay;
+		end
+		newDisplay = gold:sub(1, (strlen % 3 == 0) and 3 or (strlen % 3))..newDisplay
+
+		local output = '';
+
+		if tonumber(gold) > 0 then
+			output = format('%s%s%s ', goldColor, newDisplay, '|rg');
+		end
+
+		if (not short and (tonumber(gold) > 0 or silver > 0)) then
+			output = format('%s%s%02i%s ', output, silverColor, silver, '|rs');
+		end
+
+		if not short then
 			output = format('%s%s%02i%s ', output, copperColor, copper, '|rc');
 		end
 
