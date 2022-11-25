@@ -152,17 +152,11 @@ end
 function PepeGuildsViewer:DrawSearchResultsTable()
     local guildWindow = self.guildWindow
 
-    local function showTooltip(frame, show, text)
-        if show then
-            GameTooltip:SetOwner(frame);
-            GameTooltip:SetText(text)
-        else
-            GameTooltip:Hide();
-        end
-    end
-
+    local newTable = {}
     local cols = {
         {
+            key = "guild",
+            order = 1,
             name = L["Guild name"],
             width = 150,
             align = "MIDDLE",
@@ -170,6 +164,8 @@ function PepeGuildsViewer:DrawSearchResultsTable()
             format = "string",
         },
         {
+            key = "realm",
+            order = 2,
             name = L["Realm"],
             width = 110,
             align = "LEFT",
@@ -177,6 +173,8 @@ function PepeGuildsViewer:DrawSearchResultsTable()
             format = "string",
         },
         {
+            key = "faction",
+            order = 3,
             name = L["Faction"],
             width = 55,
             align = "LEFT",
@@ -184,6 +182,8 @@ function PepeGuildsViewer:DrawSearchResultsTable()
             format = "string",
         },
         {
+            key = "gold",
+            order = 4,
             name = L["Gold"],
             width = 100,
             align = "LEFT",
@@ -191,6 +191,8 @@ function PepeGuildsViewer:DrawSearchResultsTable()
             format = PepeGoldTracker.db.global.moneyFormat,
         },
         {
+            key = "update",
+            order = 5,
             name = L["Last update"],
             width = 125,
             align = "LEFT",
@@ -198,6 +200,8 @@ function PepeGuildsViewer:DrawSearchResultsTable()
             format = "string",
         },
         {
+            key = "delete",
+            order = 6,
             name = "",
             width = 32,
             align = "CENTER",
@@ -215,7 +219,30 @@ function PepeGuildsViewer:DrawSearchResultsTable()
         },
     }
 
-    guildWindow.searchResults = StdUi:ScrollTable(guildWindow, cols, 18, 29)
+    local function getIndex(key)
+        for column = 1, #cols do
+            if (cols[column].key == key) then
+                return column
+            end
+        end
+    end  
+    for key, value in pairs (PepeGoldTracker.db.global.hideColumnGuilds) do
+        local index = getIndex(tostring(key))
+        if ((index) and not value) then
+            table.insert(newTable, cols[index])
+        end
+    end
+
+    table.sort(newTable, function(a,b)
+        if a.order < b.order then 
+            return true 
+        end
+    end)
+
+    -- Add the delete button as you don't want to hide it in for any reason
+    table.insert(newTable, cols[getIndex('delete')])
+
+    guildWindow.searchResults = StdUi:ScrollTable(guildWindow, newTable, 18, 29)
     guildWindow.searchResults:EnableSelection(true)
     guildWindow.searchResults:SetDisplayRows(math.floor(guildWindow.searchResults:GetWidth() / guildWindow.searchResults:GetHeight()), guildWindow.searchResults.rowHeight)
 

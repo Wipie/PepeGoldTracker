@@ -129,6 +129,16 @@ function PepeGoldTracker:MigrateOldDatabaseSchema()
         }
     end
 
+    if (not self.db.global.hideColumnGuilds) then
+        self.db.global.hideColumnGuilds = {
+            ["realm"] = false,
+            ["faction"] = false,
+            ["gold"] = false,
+            ["guild"] = false,
+            ["update"] = false
+        }
+    end
+
 end
 
 function PepeGoldTracker:DrawMinimapButton()
@@ -255,29 +265,65 @@ function PepeGoldTracker:SetupOptions()
                                     return PepeGoldTracker.db.global.moneyFormat
                                 end
                             },
-                            hideColumnCharacters = {
-                                type = "multiselect",
-                                name = "Select wich columns you want to hide",
-                                order = 7,
-                                width = 1.3,
-                                values = {
-                                    name = "Name",
-                                    faction = "Faction",
-                                    icon = "Sync icon",
-                                    gold = "Gold",
-                                    guild = "Guild",
-                                    realm = "Realm",
-                                    update = "Last update",
-                                },
-                                set = function(info, val)
-                                    PepeGoldTracker.db.global.hideColumnCharacters[val] = not PepeGoldTracker.db.global.hideColumnCharacters[val]
-                                    PepeGoldTracker.charactersViewer:UpdateSearchTable()
-                                end,
-                                get = function(info, val)
-                                    return PepeGoldTracker.db.global.hideColumnCharacters[val]
-                                end
-                            },
                         }
+                    },
+                }
+            },
+            characters = {
+                type = "group",
+                name = "Characters overview options",
+                inline = true,
+                order = 5,
+                args = {
+                    hideColumnCharacters = {
+                        type = "multiselect",
+                        name = "Select wich columns you want to hide",
+                        order = 7,
+                        width = 1.3,
+                        values = {
+                            name = "Name",
+                            faction = "Faction",
+                            icon = "Sync icon",
+                            gold = "Gold",
+                            guild = "Guild",
+                            realm = "Realm",
+                            update = "Last update",
+                        },
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.hideColumnCharacters[val] = not PepeGoldTracker.db.global.hideColumnCharacters[val]
+                            PepeGoldTracker.charactersViewer:UpdateSearchTable()
+                        end,
+                        get = function(info, val)
+                            return PepeGoldTracker.db.global.hideColumnCharacters[val]
+                        end
+                    },
+                }
+            },
+            guilds = {
+                type = "group",
+                name = "Guilds overview options",
+                inline = true,
+                order = 5,
+                args = {
+                    hideColumnGuilds = {
+                        type = "multiselect",
+                        name = "Select wich columns you want to hide",
+                        order = 7,
+                        width = 1.3,
+                        values = {
+                            guild = "Guild name",
+                            faction = "Faction",
+                            gold = "Gold",
+                            realm = "Realm",
+                            update = "Last update",
+                        },
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.hideColumnGuilds[val] = not PepeGoldTracker.db.global.hideColumnGuilds[val]
+                            PepeGoldTracker.guildsViewer:UpdateSearchTable()
+                        end,
+                        get = function(info, val)
+                            return PepeGoldTracker.db.global.hideColumnGuilds[val]
+                        end
                     },
                 }
             },
@@ -308,6 +354,8 @@ function PepeGoldTracker:SetupOptions()
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable("PepeGoldTracker", self.options)
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", nil, nil, 'general')
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", "Characters Options", "PepeGoldTracker", 'characters')
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", "Guilds Options", "PepeGoldTracker", 'guilds')
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Synchronization Options"], "PepeGoldTracker", 'synchronization')
 end
 
