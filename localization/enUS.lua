@@ -48,6 +48,23 @@ L["Multi-account synching"] = true
 L["Synchronization Options"] = true
 L["Note: this feature is still experimental and will only sync characters and not guild."] = true
 L["Open sync window"] = true
+L["Guilds Options"] = true
+L["Characters Options"] = true
+L["Guilds overview options"] = true
+L["Select wich columns you want to hide"]  = true
+L["Characters overview options"] = true
+L["Synchronization icon"] = true
+L["General overview table configuration"] = true
+L["This section allow to customize the tables from overviews panels"] = true
+L["Gold format display"] = true
+-- Gold format
+L["Blizzard"] = true
+L["Blizzard short (Only show gold)"] = true
+L["Spaced (2 222g 22s 22c)"] = true
+L["Spaced short (2 222g)"] = true
+L["Coma (2,222g 22s 22c)"] = true
+L["Coma short (2,222g)"] = true
+
 
 --[[
     Minimap

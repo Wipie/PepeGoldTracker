@@ -232,27 +232,27 @@ function PepeGoldTracker:SetupOptions()
                     tableOptions = {
                         type = "group",
                         order = 5,
-                        name = "Overview table options",
+                        name = L["General overview table configuration"],
                         inline = true,
                         args = {
                             desc3 = {
                                 order = 1,
                                 type = "description",
-                                name = "This section allow you a bit of customization for the tables of the overviews panels",
+                                name = L["This section allow to customize the tables from overviews panels"],
                             },
                             moneyFormat = {
                                 type = "select",
-                                name = "Gold format display",
+                                name = L["Gold format display"],
                                 style = "dropdown",
                                 order = 6,
                                 width = 1.3,
                                 values = {
-                                    money = "Blizzard",
-                                    moneyShort = "Blizzard short (Only show gold)",
-                                    moneyWithSpace = "Spaced (2 222g 22s 22c)",
-                                    moneyWithSpaceShort = "Spaced short(2 222g)",
-                                    moneyWithComa = "Coma (2,222g 22s 22c)",
-                                    moneyWithComaShort = "Coma short (2,222g)",
+                                    money = L["Blizzard"],
+                                    moneyShort = L["Blizzard short (Only show gold)"],
+                                    moneyWithSpace = L["Spaced (2 222g 22s 22c)"],
+                                    moneyWithSpaceShort = L["Spaced short (2 222g)"],
+                                    moneyWithComa = L["Coma (2,222g 22s 22c)"],
+                                    moneyWithComaShort = L["Coma short (2,222g)"],
                                     --moneyWithoutSpace = "Packed (2222g 22s 22c)",
                                     --moneyWithoutSpaceShort = "Packed short (2222g)"
                                 },
@@ -271,23 +271,23 @@ function PepeGoldTracker:SetupOptions()
             },
             characters = {
                 type = "group",
-                name = "Characters overview options",
+                name = L["Characters overview options"],
                 inline = true,
                 order = 5,
                 args = {
                     hideColumnCharacters = {
                         type = "multiselect",
-                        name = "Select wich columns you want to hide",
+                        name = L["Select wich columns you want to hide"],
                         order = 7,
                         width = 1.3,
                         values = {
-                            name = "Name",
-                            faction = "Faction",
-                            icon = "Sync icon",
-                            gold = "Gold",
-                            guild = "Guild",
-                            realm = "Realm",
-                            update = "Last update",
+                            name = L["Character name"],
+                            faction = L["Faction"],
+                            icon = L["Synchronization icon"],
+                            gold = L["Gold"],
+                            guild = L["Guild name"],
+                            realm = L["Realm"],
+                            update = L["Last update"],
                         },
                         set = function(info, val)
                             PepeGoldTracker.db.global.hideColumnCharacters[val] = not PepeGoldTracker.db.global.hideColumnCharacters[val]
@@ -301,21 +301,21 @@ function PepeGoldTracker:SetupOptions()
             },
             guilds = {
                 type = "group",
-                name = "Guilds overview options",
+                name = L["Guilds overview options"],
                 inline = true,
                 order = 5,
                 args = {
                     hideColumnGuilds = {
                         type = "multiselect",
-                        name = "Select wich columns you want to hide",
+                        name = L["Select wich columns you want to hide"],
                         order = 7,
                         width = 1.3,
                         values = {
-                            guild = "Guild name",
-                            faction = "Faction",
-                            gold = "Gold",
-                            realm = "Realm",
-                            update = "Last update",
+                            guild = L["Guild name"],
+                            faction = L["Faction"],
+                            gold = L["Gold"],
+                            realm = L["Realm"],
+                            update = L["Last update"],
                         },
                         set = function(info, val)
                             PepeGoldTracker.db.global.hideColumnGuilds[val] = not PepeGoldTracker.db.global.hideColumnGuilds[val]
@@ -340,6 +340,7 @@ function PepeGoldTracker:SetupOptions()
                     },
                     openSync = {
                         type = "execute",
+                        width = 1.5,
                         name = L["Open sync window"],
                         order = 2,
                         func = function()
@@ -354,8 +355,8 @@ function PepeGoldTracker:SetupOptions()
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable("PepeGoldTracker", self.options)
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", nil, nil, 'general')
-    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", "Characters Options", "PepeGoldTracker", 'characters')
-    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", "Guilds Options", "PepeGoldTracker", 'guilds')
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Characters Options"], "PepeGoldTracker", 'characters')
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Guilds Options"], "PepeGoldTracker", 'guilds')
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Synchronization Options"], "PepeGoldTracker", 'synchronization')
 end
 
