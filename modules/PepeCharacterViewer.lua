@@ -172,6 +172,7 @@ function PepeCharacterViewer:DrawSearchResultsTable()
                         GameTooltip:SetText(L["Synched character"])
                         GameTooltip:Show()
                     end
+
                 end,
                 OnLeave = function(rowFrame, cellFrame)
                     GameTooltip:Hide()
@@ -250,6 +251,12 @@ function PepeCharacterViewer:DrawSearchResultsTable()
                     self.name = cols.name
                     PepeCharacterViewer:DrawConfirmationWindow()
                 end,
+                OnEnter = function(table, cellFrame, rowFrame, rowData, columnData, rowIndex)
+                    cellFrame.texture:SetTexture([[Interface\Buttons\UI-GroupLoot-Pass-Up]])
+                end,
+                OnLeave = function(rowFrame, cellFrame)
+                    cellFrame.texture:SetTexture([[Interface\Buttons\UI-GroupLoot-Pass-Down]])
+                end
             },
         },
     }
