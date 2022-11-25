@@ -172,9 +172,11 @@ StdUi.Util = {
 
 		if gold > 0 then
 			output = format('%s%i%s ', goldColor, gold, '|rg');
+		elseif (short and (tonumber(gold) <= 0)) then
+			output = format('%s%s%s ', goldColor, "0", '|rg');
 		end
 
-		if gold > 0 or silver > 0 then
+		if (not short and (tonumber(gold) > 0 or silver > 0)) then
 			output = format('%s%s%02i%s ', output, silverColor, silver, '|rs');
 		end
 
@@ -212,6 +214,8 @@ StdUi.Util = {
 
 		if tonumber(gold) > 0 then
 			output = format('%s%s%s ', goldColor, newDisplay, '|rg');
+		elseif (short and (tonumber(gold) <= 0)) then
+			output = format('%s%s%s ', goldColor, "0", '|rg');
 		end
 
 		if (not short and (tonumber(gold) > 0 or silver > 0)) then
@@ -252,6 +256,8 @@ StdUi.Util = {
 
 		if tonumber(gold) > 0 then
 			output = format('%s%s%s ', goldColor, newDisplay, '|rg');
+		elseif (short and (tonumber(gold) <= 0)) then
+			output = format('%s%s%s ', goldColor, "0", '|rg');
 		end
 
 		if (not short and (tonumber(gold) > 0 or silver > 0)) then
