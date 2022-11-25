@@ -188,7 +188,7 @@ function PepeGuildsViewer:DrawSearchResultsTable()
             width = 100,
             align = "LEFT",
             index = "gold",
-            format = "money",
+            format = PepeGoldTracker.db.global.moneyFormat,
         },
         {
             name = L["Last update"],
@@ -380,4 +380,12 @@ function PepeGuildsViewer:DrawConfirmationWindowAllGuilds()
     }
 
     StdUi:Confirm(L["Delete guild"], L["Are you sure you want to delete ALL guilds?"], buttons, 3)
+end
+
+function PepeGuildsViewer:UpdateSearchTable()
+    if (self.guildWindow) then
+        self.guildWindow.searchResults:Hide()
+        PepeGuildsViewer:DrawSearchResultsTable()
+        PepeGuildsViewer:SearchGuild("")
+    end
 end

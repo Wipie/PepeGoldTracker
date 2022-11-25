@@ -249,6 +249,7 @@ function PepeGoldTracker:SetupOptions()
                                 set = function(info, val)
                                     PepeGoldTracker.db.global.moneyFormat = val
                                     PepeGoldTracker.charactersViewer:UpdateSearchTable()
+                                    PepeGoldTracker.guildsViewer:UpdateSearchTable()
                                 end,
                                 get = function(info)
                                     return PepeGoldTracker.db.global.moneyFormat
@@ -520,7 +521,7 @@ function PepeGoldTracker:formatGold(amount, onlyGold)
     if (onlyGold) then
         if gold > 0 then
             -- Todo: Implementing option to change the BreakUpLargeNumber to 1,234,567 instead of 1234567
-            return format('%s%s ', BreakUpLargeNumbers(gold), goldIcon)
+            return format('%s%s ', PepeGoldTracker:setFormat(gold), goldIcon)
         elseif silver > 0 then
             return format('%d%s %d%s', silver, silverIcon, copper, copperIcon)
         else
@@ -529,7 +530,7 @@ function PepeGoldTracker:formatGold(amount, onlyGold)
     else
 
         if gold > 0 then
-            return format('%s%s %d%s %d%s', BreakUpLargeNumbers(gold), goldIcon, silver, silverIcon, copper, copperIcon)
+            return format('%s%s %d%s %d%s', PepeGoldTracker:setFormat(gold), goldIcon, silver, silverIcon, copper, copperIcon)
         elseif silver > 0 then
             return format('%d%s %d%s', silver, silverIcon, copper, copperIcon)
         else
@@ -574,4 +575,52 @@ function PepeGoldTracker:Split(string, delimiter)
         table.insert(result, match);
     end
     return result;
+end
+
+function PepeGoldTracker:setFormat(money)
+    local goldFormat = PepeGoldTracker.db.global.moneyFormat
+    if (goldFormat == "money") then
+         return PepeGoldTracker:formatMoney(money)
+    elseif (goldFormat == "moneyShort") then
+        return PepeGoldTracker:formatMoney(money)
+    elseif (goldFormat == "moneyWithSpace") then
+        return PepeGoldTracker:formatMoneyWithSpace(money)
+    elseif (goldFormat == "moneyWithSpaceShort") then
+        return PepeGoldTracker:formatMoneyWithSpace(money)
+    elseif (goldFormat == "moneyWithComa") then
+        return PepeGoldTracker:formatMoneyWithComa(money)
+    elseif (goldFormat == "moneyWithComaShort") then
+        return PepeGoldTracker:formatMoneyWithComa(money)
+    end
+end
+
+
+function PepeGoldTracker:formatMoney(money)
+    return money
+end
+
+function PepeGoldTracker:formatMoneyWithComa(money)
+    amount = tostring(math.floor(money));
+    local newDisplay = "";
+    local strlen = amount:len();
+    --Add each thing behind a comma
+    for i=4, strlen, 3 do
+        newDisplay = ","..amount:sub(-(i - 1), -(i - 3))..newDisplay;
+    end
+    --Add everything before the first comma
+    newDisplay = amount:sub(1, (strlen % 3 == 0) and 3 or (strlen % 3))..newDisplay;
+    return newDisplay;
+end
+
+function PepeGoldTracker:formatMoneyWithSpace(money)
+    amount = tostring(math.floor(money));
+    local newDisplay = "";
+    local strlen = amount:len();
+    --Add each thing behind a comma
+    for i=4, strlen, 3 do
+        newDisplay = " "..amount:sub(-(i - 1), -(i - 3))..newDisplay;
+    end
+    --Add everything before the first comma
+    newDisplay = amount:sub(1, (strlen % 3 == 0) and 3 or (strlen % 3))..newDisplay;
+    return newDisplay;
 end
