@@ -104,11 +104,10 @@ local methods = {
 				columnFrame.arrow:ClearAllPoints();
 				self.stdUi:GlueLeft(columnFrame.arrow, columnFrame, 5, 0, true);
 			end
-
 			if columns[i].sortable == false and columns[i].sortable ~= nil then
 
 			else
-
+				
 			end
 
 			if i > 1 then
