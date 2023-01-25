@@ -50,6 +50,22 @@ if L then
     L["Synchronization Options"] = "Options de synchronization"
     L["Note: this feature is still experimental and will only sync characters and not guild."] = "Note: cette fonctionnalité est encore en expérimentation, elle ne fonctionne uniquement pour la synchronization des personnages, pas des guildes."
     L["Open sync window"] = "Ouvrir la fenêtre de synchronization"
+    L["Guilds Options"] = "Options des guildes"
+    L["Characters Options"] = "Options des personnages"
+    L["Guilds overview options"] = "Options de suivi des guildes"
+    L["Select wich columns you want to hide"] = "Sélectionnez quelles colonnes vous souhaitez cacher"
+    L["Characters overview options"] = "Options de suivi des personnages"
+    L["Synchronization icon"] = "Îcone de synchronisation"
+    L["General overview table configuration"] = "Configuration générale des tables"
+    L["This section allow to customize the tables from overviews panels"] = "Cette section vous permet de personnaliser les tables des panneaux de suivis."
+    L["Gold format display"] = "Format d'affichage de l'or"
+    -- Gold format
+    L["Blizzard"] = "Blizzard"
+    L["Blizzard short (Only show gold)"] = "Blizzard court (Seulement l'or)"
+    L["Spaced (2 222g 22s 22c)"] = "Espacé (2 222g 22s 22c)"
+    L["Spaced short (2 222g)"] = "Espacé court (2 222g)"
+    L["Coma (2,222g 22s 22c)"] = "Virgule (2,222g 22s 22c)"
+    L["Coma short (2,222g)"] = "Virgule court (2,222g)"
 
     --[[
         Minimap

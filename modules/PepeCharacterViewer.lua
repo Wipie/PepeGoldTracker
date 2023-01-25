@@ -8,6 +8,8 @@ PepeCharacterViewer.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
 PepeCharacterViewer.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 PepeCharacterViewer.IsWrath = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_WRATH_CLASSIC
 
+PepeCharacterViewer.format = ""
+
 function PepeCharacterViewer:OnEnable()
     self.configDB = PepeGoldTracker.db.char
     self:RegisterEvent("PLAYER_MONEY", "OnEvent")
@@ -141,20 +143,22 @@ function PepeCharacterViewer:OnEvent(event)
     end
 end
 
+function PepeCharacterViewer:UpdateSearchTable()
+    if (self.characterWindow) then
+        self.characterWindow.searchResults:Hide()
+        PepeCharacterViewer:DrawSearchResultsTable()
+        PepeCharacterViewer:SearchChar("")
+    end
+end
+
 function PepeCharacterViewer:DrawSearchResultsTable()
     local characterWindow = self.characterWindow
 
-    local function showTooltip(frame, show, text)
-        if show then
-            GameTooltip:SetOwner(frame);
-            GameTooltip:SetText(text)
-        else
-            GameTooltip:Hide();
-        end
-    end
-
+    local newTable = {}
     local cols = {
         {
+            key = "icon",
+            order = 1,
             name = "",
             width = 24,
             align = "CENTER",
@@ -168,6 +172,7 @@ function PepeCharacterViewer:DrawSearchResultsTable()
                         GameTooltip:SetText(L["Synched character"])
                         GameTooltip:Show()
                     end
+
                 end,
                 OnLeave = function(rowFrame, cellFrame)
                     GameTooltip:Hide()
@@ -175,6 +180,8 @@ function PepeCharacterViewer:DrawSearchResultsTable()
             },
         },
         {
+            key = "name",
+            order = 2,
             name = L["Character name"],
             width = 150,
             align = "MIDDLE",
@@ -182,6 +189,8 @@ function PepeCharacterViewer:DrawSearchResultsTable()
             format = "string",
         },
         {
+            key = "realm",
+            order = 3,
             name = L["Realm"],
             width = 110,
             align = "LEFT",
@@ -189,6 +198,8 @@ function PepeCharacterViewer:DrawSearchResultsTable()
             format = "string",
         },
         {
+            key = "faction",
+            order = 4,
             name = L["Faction"],
             width = 55,
             align = "LEFT",
@@ -196,13 +207,17 @@ function PepeCharacterViewer:DrawSearchResultsTable()
             format = "string",
         },
         {
+            key = "gold",
+            order = 5,
             name = L["Gold"],
             width = 100,
             align = "LEFT",
             index = "gold",
-            format = "money",
+            format = PepeGoldTracker.db.global.moneyFormat,
         },
         {
+            key = "guild",
+            order = 6,
             name = L["Guild name"],
             width = 150,
             align = "MIDDLE",
@@ -211,6 +226,8 @@ function PepeCharacterViewer:DrawSearchResultsTable()
             defaultSort = "asc"
         },
         {
+            key = "update",
+            order = 7,
             name = L["Last update"],
             width = 125,
             align = "LEFT",
@@ -218,6 +235,8 @@ function PepeCharacterViewer:DrawSearchResultsTable()
             format = "string",
         },
         {
+            key = "delete",
+            order = 8,
             name = "",
             width = 32,
             align = "CENTER",
@@ -232,11 +251,40 @@ function PepeCharacterViewer:DrawSearchResultsTable()
                     self.name = cols.name
                     PepeCharacterViewer:DrawConfirmationWindow()
                 end,
+                OnEnter = function(table, cellFrame, rowFrame, rowData, columnData, rowIndex)
+                    cellFrame.texture:SetTexture([[Interface\Buttons\UI-GroupLoot-Pass-Up]])
+                end,
+                OnLeave = function(rowFrame, cellFrame)
+                    cellFrame.texture:SetTexture([[Interface\Buttons\UI-GroupLoot-Pass-Down]])
+                end
             },
         },
     }
 
-    characterWindow.searchResults = StdUi:ScrollTable(characterWindow, cols, 18, 29)
+    local function getIndex(key)
+        for column = 1, #cols do
+            if (cols[column].key == key) then
+                return column
+            end
+        end
+    end  
+    for key, value in pairs (PepeGoldTracker.db.global.hideColumnCharacters) do
+        local index = getIndex(tostring(key))
+        if ((index) and not value) then
+            table.insert(newTable, cols[index])
+        end
+    end
+
+    table.sort(newTable, function(a,b)
+        if a.order < b.order then 
+            return true 
+        end
+    end)
+
+    -- Add the delete button as you don't want to hide it in for any reason
+    table.insert(newTable, cols[getIndex('delete')])
+    
+    characterWindow.searchResults = StdUi:ScrollTable(characterWindow, newTable, 18, 29)
     characterWindow.searchResults:EnableSelection(true)
     characterWindow.searchResults:SetDisplayRows(math.floor(characterWindow.searchResults:GetWidth() / characterWindow.searchResults:GetHeight()), characterWindow.searchResults.rowHeight)
 
@@ -263,6 +311,7 @@ function PepeCharacterViewer:DrawSearchResultsTable()
 
     characterWindow.stateLabel = StdUi:Label(characterWindow.searchResults, L["No results found."])
     StdUi:GlueTop(characterWindow.stateLabel, characterWindow.searchResults, 0, -40, "CENTER")
+    self.characterWindow.searchResults =  characterWindow.searchResults
 end
 
 function PepeCharacterViewer:UpdateStateText()

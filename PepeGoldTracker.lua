@@ -82,7 +82,7 @@ function PepeGoldTracker:OnEnable()
     self:RegisterEvent("PLAYER_ENTERING_WORLD", "OnEvent")
     self:RegisterEvent("PLAYER_MONEY", "OnEvent")
 
-    success = C_ChatInfo.RegisterAddonMessagePrefix("PepeSync")
+    C_ChatInfo.RegisterAddonMessagePrefix("PepeSync")
     C_ChatInfo.RegisterAddonMessagePrefix("PepeSyncStatus")
     C_ChatInfo.RegisterAddonMessagePrefix("PepeSyncStart")
 
@@ -112,6 +112,33 @@ function PepeGoldTracker:MigrateOldDatabaseSchema()
     if (not self.db.global.autoOpenCurrentRealm) then
         self.db.global.autoOpenCurrentRealm = { ["hide"] = false }
     end
+
+    if (not self.db.global.moneyFormat) then
+        self.db.global.moneyFormat = "money"
+    end
+
+    if (not self.db.global.hideColumnCharacters) then
+        self.db.global.hideColumnCharacters = {
+            ["icon"] = false,
+            ["name"] = false,
+            ["realm"] = false,
+            ["faction"] = false,
+            ["gold"] = false,
+            ["guild"] = false,
+            ["update"] = false
+        }
+    end
+
+    if (not self.db.global.hideColumnGuilds) then
+        self.db.global.hideColumnGuilds = {
+            ["realm"] = false,
+            ["faction"] = false,
+            ["gold"] = false,
+            ["guild"] = false,
+            ["update"] = false
+        }
+    end
+
 end
 
 function PepeGoldTracker:DrawMinimapButton()
@@ -202,6 +229,102 @@ function PepeGoldTracker:SetupOptions()
                             return not PepeGoldTracker.db.global.autoOpenCurrentRealm.hide
                         end
                     },
+                    tableOptions = {
+                        type = "group",
+                        order = 5,
+                        name = L["General overview table configuration"],
+                        inline = true,
+                        args = {
+                            desc3 = {
+                                order = 1,
+                                type = "description",
+                                name = L["This section allow to customize the tables from overviews panels"],
+                            },
+                            moneyFormat = {
+                                type = "select",
+                                name = L["Gold format display"],
+                                style = "dropdown",
+                                order = 6,
+                                width = 1.3,
+                                values = {
+                                    money = L["Blizzard"],
+                                    moneyShort = L["Blizzard short (Only show gold)"],
+                                    moneyWithSpace = L["Spaced (2 222g 22s 22c)"],
+                                    moneyWithSpaceShort = L["Spaced short (2 222g)"],
+                                    moneyWithComa = L["Coma (2,222g 22s 22c)"],
+                                    moneyWithComaShort = L["Coma short (2,222g)"],
+                                    --moneyWithoutSpace = "Packed (2222g 22s 22c)",
+                                    --moneyWithoutSpaceShort = "Packed short (2222g)"
+                                },
+                                set = function(info, val)
+                                    PepeGoldTracker.db.global.moneyFormat = val
+                                    PepeGoldTracker.charactersViewer:UpdateSearchTable()
+                                    PepeGoldTracker.guildsViewer:UpdateSearchTable()
+                                end,
+                                get = function(info)
+                                    return PepeGoldTracker.db.global.moneyFormat
+                                end
+                            },
+                        }
+                    },
+                }
+            },
+            characters = {
+                type = "group",
+                name = L["Characters overview options"],
+                inline = true,
+                order = 5,
+                args = {
+                    hideColumnCharacters = {
+                        type = "multiselect",
+                        name = L["Select wich columns you want to hide"],
+                        order = 7,
+                        width = 1.3,
+                        values = {
+                            name = L["Character name"],
+                            faction = L["Faction"],
+                            icon = L["Synchronization icon"],
+                            gold = L["Gold"],
+                            guild = L["Guild name"],
+                            realm = L["Realm"],
+                            update = L["Last update"],
+                        },
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.hideColumnCharacters[val] = not PepeGoldTracker.db.global.hideColumnCharacters[val]
+                            PepeGoldTracker.charactersViewer:UpdateSearchTable()
+                        end,
+                        get = function(info, val)
+                            return PepeGoldTracker.db.global.hideColumnCharacters[val]
+                        end
+                    },
+                }
+            },
+            guilds = {
+                type = "group",
+                name = L["Guilds overview options"],
+                inline = true,
+                order = 5,
+                args = {
+                    hideColumnGuilds = {
+                        type = "multiselect",
+                        name = L["Select wich columns you want to hide"],
+                        order = 7,
+                        width = 1.3,
+                        values = {
+                            guild = L["Guild name"],
+                            faction = L["Faction"],
+                            gold = L["Gold"],
+                            realm = L["Realm"],
+                            update = L["Last update"],
+                        },
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.hideColumnGuilds[val] = not PepeGoldTracker.db.global.hideColumnGuilds[val]
+                            PepeGoldTracker.guildsViewer:UpdateSearchTable()
+                        end,
+                        get = function(info, val)
+                            return PepeGoldTracker.db.global.hideColumnGuilds[val]
+                        end
+                    },
                 }
             },
             synchronization = {
@@ -217,6 +340,7 @@ function PepeGoldTracker:SetupOptions()
                     },
                     openSync = {
                         type = "execute",
+                        width = 1.5,
                         name = L["Open sync window"],
                         order = 2,
                         func = function()
@@ -231,6 +355,8 @@ function PepeGoldTracker:SetupOptions()
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable("PepeGoldTracker", self.options)
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", nil, nil, 'general')
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Characters Options"], "PepeGoldTracker", 'characters')
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Guilds Options"], "PepeGoldTracker", 'guilds')
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Synchronization Options"], "PepeGoldTracker", 'synchronization')
 end
 
@@ -444,7 +570,7 @@ function PepeGoldTracker:formatGold(amount, onlyGold)
     if (onlyGold) then
         if gold > 0 then
             -- Todo: Implementing option to change the BreakUpLargeNumber to 1,234,567 instead of 1234567
-            return format('%s%s ', BreakUpLargeNumbers(gold), goldIcon)
+            return format('%s%s ', PepeGoldTracker:setFormat(gold), goldIcon)
         elseif silver > 0 then
             return format('%d%s %d%s', silver, silverIcon, copper, copperIcon)
         else
@@ -453,7 +579,7 @@ function PepeGoldTracker:formatGold(amount, onlyGold)
     else
 
         if gold > 0 then
-            return format('%s%s %d%s %d%s', BreakUpLargeNumbers(gold), goldIcon, silver, silverIcon, copper, copperIcon)
+            return format('%s%s %d%s %d%s', PepeGoldTracker:setFormat(gold), goldIcon, silver, silverIcon, copper, copperIcon)
         elseif silver > 0 then
             return format('%d%s %d%s', silver, silverIcon, copper, copperIcon)
         else
@@ -498,4 +624,52 @@ function PepeGoldTracker:Split(string, delimiter)
         table.insert(result, match);
     end
     return result;
+end
+
+function PepeGoldTracker:setFormat(money)
+    local goldFormat = PepeGoldTracker.db.global.moneyFormat
+    if (goldFormat == "money") then
+         return PepeGoldTracker:formatMoney(money)
+    elseif (goldFormat == "moneyShort") then
+        return PepeGoldTracker:formatMoney(money)
+    elseif (goldFormat == "moneyWithSpace") then
+        return PepeGoldTracker:formatMoneyWithSpace(money)
+    elseif (goldFormat == "moneyWithSpaceShort") then
+        return PepeGoldTracker:formatMoneyWithSpace(money)
+    elseif (goldFormat == "moneyWithComa") then
+        return PepeGoldTracker:formatMoneyWithComa(money)
+    elseif (goldFormat == "moneyWithComaShort") then
+        return PepeGoldTracker:formatMoneyWithComa(money)
+    end
+end
+
+
+function PepeGoldTracker:formatMoney(money)
+    return money
+end
+
+function PepeGoldTracker:formatMoneyWithComa(money)
+    amount = tostring(math.floor(money));
+    local newDisplay = "";
+    local strlen = amount:len();
+    --Add each thing behind a comma
+    for i=4, strlen, 3 do
+        newDisplay = ","..amount:sub(-(i - 1), -(i - 3))..newDisplay;
+    end
+    --Add everything before the first comma
+    newDisplay = amount:sub(1, (strlen % 3 == 0) and 3 or (strlen % 3))..newDisplay;
+    return newDisplay;
+end
+
+function PepeGoldTracker:formatMoneyWithSpace(money)
+    amount = tostring(math.floor(money));
+    local newDisplay = "";
+    local strlen = amount:len();
+    --Add each thing behind a comma
+    for i=4, strlen, 3 do
+        newDisplay = " "..amount:sub(-(i - 1), -(i - 3))..newDisplay;
+    end
+    --Add everything before the first comma
+    newDisplay = amount:sub(1, (strlen % 3 == 0) and 3 or (strlen % 3))..newDisplay;
+    return newDisplay;
 end
