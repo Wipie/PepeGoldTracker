@@ -82,7 +82,7 @@ function PepeGoldTracker:OnEnable()
     self:RegisterEvent("PLAYER_ENTERING_WORLD", "OnEvent")
     self:RegisterEvent("PLAYER_MONEY", "OnEvent")
 
-    success = C_ChatInfo.RegisterAddonMessagePrefix("PepeSync")
+    C_ChatInfo.RegisterAddonMessagePrefix("PepeSync")
     C_ChatInfo.RegisterAddonMessagePrefix("PepeSyncStatus")
     C_ChatInfo.RegisterAddonMessagePrefix("PepeSyncStart")
 
