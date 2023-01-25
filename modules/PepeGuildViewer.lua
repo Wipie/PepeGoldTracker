@@ -65,11 +65,7 @@ function PepeGuildsViewer:DrawWindow()
 
     StdUi:MakeResizable(guildWindow, "BOTTOMRIGHT")
     StdUi:MakeResizable(guildWindow, "TOPLEFT")
-    if (self.IsRetail) then
-        guildWindow:SetResizeBounds(950, 250)
-    else 
-        guildWindow:SetMinResize(950, 250)
-    end
+    guildWindow:SetResizeBounds(950, 250)
     guildWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
     guildWindow:SetScript("OnMouseDown", function(self)
         self:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())

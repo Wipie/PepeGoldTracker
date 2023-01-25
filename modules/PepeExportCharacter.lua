@@ -41,11 +41,7 @@ function PepeExportCharacter:DrawExportCharWindow()
     end)
 
     StdUi:MakeResizable(exportCharWindow, "BOTTOMRIGHT")
-    if (self.IsRetail) then
-        exportCharWindow:SetResizeBounds(250, 332)
-    else
-        exportCharWindow:SetMinResize(250, 332)
-    end
+    exportCharWindow:SetResizeBounds(250, 332)
     exportCharWindow:IsUserPlaced(true);
 
     local editBox = StdUi:MultiLineBox(exportCharWindow, 280, 300, nil)
