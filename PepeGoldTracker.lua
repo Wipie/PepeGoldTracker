@@ -3,6 +3,7 @@ _G["PepeGoldTracker"] = PepeGoldTracker
 local StdUi = LibStub('StdUi')
 local ldbi = LibStub("LibDBIcon-1.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("PepeGoldTracker")
+local ldbc = LibStub:GetLibrary("LibDBCompartment-1.0");
 
 
 PepeGoldTracker.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
@@ -40,7 +41,7 @@ function SlashCmdList.pgt(command)
         PepeGoldTracker.currentRealm:Toggle()
     elseif (command == 'minimap') then
         PepeGoldTracker.db.global.minimap.hide = not PepeGoldTracker.db.global.minimap.hide
-        ldbi:Refresh("PepeGTMinimapButton", PepeGoldTracker.db.global.minimap)
+        ldbi:Refresh("PepeGoldTracker", PepeGoldTracker.db.global.minimap)
     else
         print(PepeGoldTracker.color.orange .."Pepe Gold Tracker ".. GetAddOnMetadata("PepeGoldTracker", "Version"))
         print(PepeGoldTracker.color.lightgreen ..L["Usage: |cffd4af37/pepe|r or |cffd4af37/pepegoldtracker|r followed by one the commands below"])
@@ -142,7 +143,7 @@ function PepeGoldTracker:MigrateOldDatabaseSchema()
 end
 
 function PepeGoldTracker:DrawMinimapButton()
-    local ldb = LibStub("LibDataBroker-1.1"):NewDataObject("PepeGTMinimapButton", {
+    local ldb = LibStub("LibDataBroker-1.1"):NewDataObject("PepeGoldTracker", {
         type = "launcher",
         icon = [=[Interface\Addons\PepeGoldTracker\media\PepeAlone.tga]=],
         OnClick = function(self)
@@ -166,8 +167,12 @@ function PepeGoldTracker:DrawMinimapButton()
         end,
     })
 
-    ldbi:Register("PepeGTMinimapButton", ldb, self.db.global.minimap)
-    ldbi:Refresh("PepeGTMinimapButton", self.db.global.minimap)
+
+    -- New 10.1 Compartment system.
+    ldbc:Register("PepeGoldTracker", ldb, self.db.global.minimap)
+
+    ldbi:Register("PepeGoldTracker", ldb, self.db.global.minimap)
+    ldbi:Refresh("PepeGoldTracker", self.db.global.minimap)
 end
 
 function PepeGoldTracker:GetNextFrameLevel()
@@ -209,7 +214,7 @@ function PepeGoldTracker:SetupOptions()
                         order = 4,
                         set = function(info, val)
                             PepeGoldTracker.db.global.minimap.hide = not val
-                            ldbi:Refresh("PepeGTMinimapButton", PepeGoldTracker.db.global.minimap)
+                            ldbi:Refresh("PepeGoldTracker", PepeGoldTracker.db.global.minimap)
                         end,
                         get = function(info)
                             return not PepeGoldTracker.db.global.minimap.hide
