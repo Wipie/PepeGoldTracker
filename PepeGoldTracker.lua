@@ -3,7 +3,7 @@ _G["PepeGoldTracker"] = PepeGoldTracker
 local StdUi = LibStub('StdUi')
 local ldbi = LibStub("LibDBIcon-1.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("PepeGoldTracker")
-
+local ldbc
 PepeGoldTracker.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
 PepeGoldTracker.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
 PepeGoldTracker.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
@@ -12,7 +12,7 @@ PepeGoldTracker.IsWrath = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_WRATH_CLASSIC
 
 
 if (PepeGoldTracker.IsRetail) then
-    local ldbc = LibStub:GetLibrary("LibDBCompartment-1.0");
+    ldbc = LibStub:GetLibrary("LibDBCompartment-1.0");
 end
 
 PepeGoldTracker.color = {

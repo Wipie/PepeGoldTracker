@@ -1,4 +1,4 @@
-## Interface: 100100
+## Interface: 100107
 ## Title: PepeGoldTracker
 ## IconTexture: Interface\Addons\PepeGoldTracker\media\PepeAlone
 ## Notes: Addon that help tracking gold stored accross your account
