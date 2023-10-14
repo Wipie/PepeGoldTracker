@@ -3,13 +3,17 @@ _G["PepeGoldTracker"] = PepeGoldTracker
 local StdUi = LibStub('StdUi')
 local ldbi = LibStub("LibDBIcon-1.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("PepeGoldTracker")
-local ldbc = LibStub:GetLibrary("LibDBCompartment-1.0");
-
 
 PepeGoldTracker.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
 PepeGoldTracker.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
 PepeGoldTracker.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 PepeGoldTracker.IsWrath = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_WRATH_CLASSIC
+
+
+
+if (PepeGoldTracker.IsRetail) then
+    local ldbc = LibStub:GetLibrary("LibDBCompartment-1.0");
+end
 
 PepeGoldTracker.color = {
     orange = '|cffd4af37',
@@ -168,8 +172,10 @@ function PepeGoldTracker:DrawMinimapButton()
     })
 
 
-    -- New 10.1 Compartment system.
-    ldbc:Register("PepeGoldTracker", ldb, self.db.global.minimap)
+    if (PepeGoldTracker.IsRetail) then
+        -- New 10.1 Compartment system.
+        ldbc:Register("PepeGoldTracker", ldb, self.db.global.minimap)
+    end
 
     ldbi:Register("PepeGoldTracker", ldb, self.db.global.minimap)
     ldbi:Refresh("PepeGoldTracker", self.db.global.minimap)
