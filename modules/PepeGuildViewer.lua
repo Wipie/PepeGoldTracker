@@ -155,7 +155,7 @@ function PepeGuildsViewer:DrawSearchResultsTable()
             order = 1,
             name = L["Guild name"],
             width = 150,
-            align = "MIDDLE",
+            align = "CENTER",
             index = "name",
             format = "string",
         },

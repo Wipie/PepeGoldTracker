@@ -180,7 +180,7 @@ function PepeCharacterViewer:DrawSearchResultsTable()
             order = 2,
             name = L["Character name"],
             width = 150,
-            align = "MIDDLE",
+            align = "CENTER",
             index = "name",
             format = "string",
         },
@@ -216,7 +216,7 @@ function PepeCharacterViewer:DrawSearchResultsTable()
             order = 6,
             name = L["Guild name"],
             width = 150,
-            align = "MIDDLE",
+            align = "CENTER",
             index = "guild",
             format = "string",
             defaultSort = "asc"
