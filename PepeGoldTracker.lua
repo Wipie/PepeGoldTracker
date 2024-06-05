@@ -152,7 +152,7 @@ function PepeGoldTracker:DrawMinimapButton()
         icon = [=[Interface\Addons\PepeGoldTracker\media\PepeAlone.tga]=],
         OnClick = function(self)
             if (not self.menuFrame) then
-                local menuFrame = CreateFrame("Frame", "ExampleMenuFrame", UIParent, "UIDropDownMenuTemplate")
+                local menuFrame = CreateFrame("Frame", "PepeMinimapFrame", UIParent, "UIDropDownMenuTemplate")
                 self.menuFrame = menuFrame
             end
             local menu = {
@@ -167,7 +167,14 @@ function PepeGoldTracker:DrawMinimapButton()
                     PepeGoldTracker.currentRealm:Toggle()
                 end },
             }
-            EasyMenu(menu, self.menuFrame, "cursor", 0, 0, "MENU");
+           -- EasyMenu(menu, self.menuFrame, "cursor", 0, 0, "MENU");
+          --  MenuUtil.RegisterButtonMenu(menu, self.menuFrame, "cursor", 0, 0, "MENU")
+            MenuUtil.CreateContextMenu(menu, function(ownerRegion, rootDescription)
+                rootDescription:CreateTitle("Pepe Gold Tracker")
+                rootDescription:CreateButton(L["Toggle character window"], function() PepeGoldTracker.charactersViewer:Toggle() end)
+                rootDescription:CreateButton(L["Toggle guild window"], function() PepeGoldTracker.guildsViewer:Toggle() end)
+                rootDescription:CreateButton(L["Toggle realm window"], function() PepeGoldTracker.currentRealm:Toggle() end)
+            end)
         end,
     })
 
