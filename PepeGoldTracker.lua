@@ -36,9 +36,9 @@ function SlashCmdList.pgt(command)
     elseif (command == 'guild') then
         PepeGoldTracker.guildsViewer:OpenPanel()
     elseif (command == 'version') then
-        PepeGoldTracker:Print(PepeGoldTracker.colorString ..L["The current PepeGoldTracker version is: %s"]:format(GetAddOnMetadata("PepeGoldTracker", "Version")))
+        PepeGoldTracker:Print(PepeGoldTracker.colorString ..L["The current PepeGoldTracker version is: %s"]:format(C_AddOns.GetAddOnMetadata("PepeGoldTracker", "Version")))
     elseif (command == 'options') then
-        InterfaceOptionsFrame_OpenToCategory("PepeGoldTracker");
+        --Settings.OpenToCategory(Settings.GetCategory("PepeGoldTracker"))
     elseif (command == 'sync') then
         PepeGoldTracker.syncModule:Toggle()
     elseif (command == 'realm') then
@@ -47,7 +47,7 @@ function SlashCmdList.pgt(command)
         PepeGoldTracker.db.global.minimap.hide = not PepeGoldTracker.db.global.minimap.hide
         ldbi:Refresh("PepeGoldTracker", PepeGoldTracker.db.global.minimap)
     else
-        print(PepeGoldTracker.color.orange .."Pepe Gold Tracker ".. GetAddOnMetadata("PepeGoldTracker", "Version"))
+        print(PepeGoldTracker.color.orange .."Pepe Gold Tracker ".. C_AddOns.GetAddOnMetadata("PepeGoldTracker", "Version"))
         print(PepeGoldTracker.color.lightgreen ..L["Usage: |cffd4af37/pepe|r or |cffd4af37/pepegoldtracker|r followed by one the commands below"])
         print("   " .. PepeGoldTracker.color.orange .. " char "..PepeGoldTracker.color.reset ..L["- open character window"])
         print("   " .. PepeGoldTracker.color.orange .. " guild "..PepeGoldTracker.color.reset ..L["- open guild window"])
@@ -78,7 +78,7 @@ function PepeGoldTracker:OnInitialize()
 
     PepeGoldTracker:SetupOptions() -- Options Page
 
-    print(PepeGoldTracker.color.orange .."PepeGoldTracker "..GetAddOnMetadata("PepeGoldTracker", "Version")..L[" initializated successfully"])
+    print(PepeGoldTracker.color.orange .."PepeGoldTracker "..C_AddOns.GetAddOnMetadata("PepeGoldTracker", "Version")..L[" initializated successfully"])
 end
 
 -- Executed after addon loading allowing to get data from char without having a nil value
@@ -169,7 +169,7 @@ function PepeGoldTracker:DrawMinimapButton()
             }
            -- EasyMenu(menu, self.menuFrame, "cursor", 0, 0, "MENU");
           --  MenuUtil.RegisterButtonMenu(menu, self.menuFrame, "cursor", 0, 0, "MENU")
-            MenuUtil.CreateContextMenu(menu, function(ownerRegion, rootDescription)
+            MenuUtil.CreateContextMenu(self.menuFrame, function(ownerRegion, rootDescription)
                 rootDescription:CreateTitle("Pepe Gold Tracker")
                 rootDescription:CreateButton(L["Toggle character window"], function() PepeGoldTracker.charactersViewer:Toggle() end)
                 rootDescription:CreateButton(L["Toggle guild window"], function() PepeGoldTracker.guildsViewer:Toggle() end)
@@ -210,12 +210,12 @@ function PepeGoldTracker:SetupOptions()
                     },
                     author = {
                         type = "description",
-                        name = PepeGoldTracker.color.lightorange..L["Author: "]..PepeGoldTracker.color.reset..GetAddOnMetadata("PepeGoldTracker", "Author") .. "\n",
+                        name = PepeGoldTracker.color.lightorange..L["Author: "]..PepeGoldTracker.color.reset..C_AddOns.GetAddOnMetadata("PepeGoldTracker", "Author") .. "\n",
                         order = 2
                     },
                     version = {
                         type = "description",
-                        name = PepeGoldTracker.color.lightorange..L["Version: "]..PepeGoldTracker.color.reset..GetAddOnMetadata("PepeGoldTracker", "Version") .. "\n",
+                        name = PepeGoldTracker.color.lightorange..L["Version: "]..PepeGoldTracker.color.reset..C_AddOns.GetAddOnMetadata("PepeGoldTracker", "Version") .. "\n",
                         order = 3
                     },
                     hideminimap = {
