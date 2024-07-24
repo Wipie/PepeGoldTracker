@@ -4,12 +4,12 @@ if not StdUi then
 	return
 end
 
-local module, version = 'Config', 4;
+local module, version = 'Config', 6;
 if not StdUi:UpgradeNeeded(module, version) then
 	return
 end
 
-local IsAddOnLoaded =  C_AddOns.IsAddOnLoaded;
+local IsAddOnLoaded =  C_AddOns.IsAddOnLoaded or IsAddOnLoaded;
 
 StdUi.config = {};
 
