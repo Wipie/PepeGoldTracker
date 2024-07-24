@@ -4,12 +4,12 @@ if not StdUi then
 	return
 end
 
-local module, version = 'Config', 4;
+local module, version = 'Config', 6;
 if not StdUi:UpgradeNeeded(module, version) then
 	return
 end
 
-local IsAddOnLoaded = IsAddOnLoaded;
+local IsAddOnLoaded =  C_AddOns.IsAddOnLoaded or IsAddOnLoaded;
 
 StdUi.config = {};
 
@@ -78,7 +78,7 @@ function StdUi:ResetConfig()
 		}
 	};
 
-	if IsAddOnLoaded('ElvUI') then
+	if  C_AddOns.IsAddOnLoaded('ElvUI') then
 		local eb = ElvUI[1].media.backdropfadecolor;
 		self.config.backdrop.panel = { r = eb[1], g = eb[2], b = eb[3], a = eb[4] };
 	end
