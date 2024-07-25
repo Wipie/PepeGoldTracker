@@ -378,8 +378,7 @@ function PepeGoldTracker:SetupOptions()
                 order = 5,
                 args = {
                     lockGoldWindow = {
-                        name = L["Show current gold window"],
-                        desc = PepeGoldTracker.color.gray..L["Auto-open the current gold window."]..PepeGoldTracker.color.reset,
+                        name = L["Lock gold window position"],
                         descStyle = "inline",
                         width = "full",
                         type = "toggle",

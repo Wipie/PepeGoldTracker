@@ -55,13 +55,17 @@ if L then
     L["Open sync window"] = "Ouvrir la fenêtre de synchronization"
     L["Guilds Options"] = "Options des guildes"
     L["Characters Options"] = "Options des personnages"
+    L["Gold Widget Options"] = "Options pour le widget d'or"
     L["Guilds overview options"] = "Options de suivi des guildes"
     L["Select wich columns you want to hide"] = "Sélectionnez quelles colonnes vous souhaitez cacher"
     L["Characters overview options"] = "Options de suivi des personnages"
+    L["Gold Widget overview options"] = "Options du widget d'or"
     L["Synchronization icon"] = "Îcone de synchronisation"
     L["General overview table configuration"] = "Configuration générale des tables"
     L["This section allow to customize the tables from overviews panels"] = "Cette section vous permet de personnaliser les tables des panneaux de suivis."
     L["Gold format display"] = "Format d'affichage de l'or"
+    L["Lock gold window position"] = "Vérouiller la position de la fenêtre d'or actuel"
+
     -- Gold format
     L["Blizzard"] = "Blizzard"
     L["Blizzard short (Only show gold)"] = "Blizzard court (Seulement l'or)"

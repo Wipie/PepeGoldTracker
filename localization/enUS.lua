@@ -53,13 +53,17 @@ L["Note: this feature is still experimental and will only sync characters and no
 L["Open sync window"] = true
 L["Guilds Options"] = true
 L["Characters Options"] = true
+L["Gold Widget Options"] = true
 L["Guilds overview options"] = true
 L["Select wich columns you want to hide"]  = true
 L["Characters overview options"] = true
+L["Gold Widget overview options"] = true
 L["Synchronization icon"] = true
 L["General overview table configuration"] = true
 L["This section allow to customize the tables from overviews panels"] = true
 L["Gold format display"] = true
+L["Lock gold window position"] = true
+
 -- Gold format
 L["Blizzard"] = true
 L["Blizzard short (Only show gold)"] = true
