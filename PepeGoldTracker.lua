@@ -130,13 +130,13 @@ function PepeGoldTracker:MigrateOldDatabaseSchema()
         self.db.global.moneyFormat = "money"
     end
 
-    if (not self.db.global.lockGoldWindow) then
-        self.db.global.lockGoldWindow = { ["lock"] = false }
-    end
-
-    if (not self.db.global.goldWindow) then
-        self.db.global.goldWindow = { ["height"] = 30 }
-        self.db.global.goldWindow = { ["width"] = 150 }
+    if (not self.db.global.goldWindowOptions) then
+        self.db.global.goldWindowOptions = { 
+            ["height"] = 30,
+            ["width"] = 150,
+            ["data"] = "account",
+            ["lock"] = false
+         }
     end
 
     if (not self.db.global.hideColumnCharacters) then
@@ -389,14 +389,14 @@ function PepeGoldTracker:SetupOptions()
                         type = "toggle",
                         order = 4,
                         set = function(info, val)
-                            PepeGoldTracker.db.global.lockGoldWindow.lock = not val
+                            PepeGoldTracker.db.global.goldWindowOptions.lock = not val
                             -- Modifiy localization for options
                             -- Add option to select the display
                             -- Base gold format on the global display (Character, Realm, Account)
                             PepeGoldTracker.currentGold:UpdateWindow()
                         end,
                         get = function(info)
-                            return not PepeGoldTracker.db.global.lockGoldWindow.lock
+                            return not PepeGoldTracker.db.global.goldWindowOptions.lock
                         end
                     },
                     height = {
@@ -407,11 +407,11 @@ function PepeGoldTracker:SetupOptions()
                         max = 100,
                         step = 1,
                         set = function(info, val)
-                            PepeGoldTracker.db.global.goldWindow.height = val
+                            PepeGoldTracker.db.global.goldWindowOptions.height = val
                             PepeGoldTracker.currentGold:UpdateWindow()
                         end,
                         get = function(info)
-                            return PepeGoldTracker.db.global.goldWindow.height
+                            return PepeGoldTracker.db.global.goldWindowOptions.height
                         end,
                     },
                     width = {
@@ -422,12 +422,31 @@ function PepeGoldTracker:SetupOptions()
                         max = 500,
                         step = 1,
                         set = function(info, val)
-                            PepeGoldTracker.db.global.goldWindow.width = val
+                            PepeGoldTracker.db.global.goldWindowOptions.width = val
                             PepeGoldTracker.currentGold:UpdateWindow()
                         end,
                         get = function(info)
-                            return PepeGoldTracker.db.global.goldWindow.width
+                            return PepeGoldTracker.db.global.goldWindowOptions.width
                         end,
+                    },
+                    dataDisplay = {
+                        type = "select",
+                        name = L["Data display source"],
+                        style = "dropdown",
+                        order = 6,
+                        width = 1.3,
+                        values = {
+                            character = L["Character"],
+                            realm = L["Current realm"],
+                            account = L["Account"],
+                        },
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.moneyFormat = val
+                            PepeGoldTracker.currentGold:UpdateWindow()
+                        end,
+                        get = function(info)
+                            return PepeGoldTracker.db.global.moneyFormat
+                        end
                     },
                 }
             },

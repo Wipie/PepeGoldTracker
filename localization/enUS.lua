@@ -63,6 +63,12 @@ L["General overview table configuration"] = true
 L["This section allow to customize the tables from overviews panels"] = true
 L["Gold format display"] = true
 L["Lock gold window position"] = true
+L["Data display source"] = true
+
+-- Data Display
+L["Character"] = true
+L["Current realm"] = true
+L["Account"] = true
 
 -- Gold format
 L["Blizzard"] = true

@@ -65,6 +65,12 @@ if L then
     L["This section allow to customize the tables from overviews panels"] = "Cette section vous permet de personnaliser les tables des panneaux de suivis."
     L["Gold format display"] = "Format d'affichage de l'or"
     L["Lock gold window position"] = "Vérouiller la position de la fenêtre d'or actuel"
+    L["Data display source"] = "Source des données"
+
+    -- Data Display
+    L["Character"] = "Personnage"
+    L["Current realm"] = "Serveur actuel"
+    L["Account"] = "Compte"
 
     -- Gold format
     L["Blizzard"] = "Blizzard"
