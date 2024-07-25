@@ -654,6 +654,7 @@ end
 
 function PepeGoldTracker:OnEvent(event)
     if ((event == 'PLAYER_MONEY') or (event == 'PLAYER_ENTERING_WORLD')) then
+        PepeGoldTracker.currentGold:UpdateWindow()
         if ((event == 'PLAYER_ENTERING_WORLD') and (UnitLevel("player") < 11) and (not PepeGoldTracker.db.global.autoOpenCurrentRealm.hide)) then
             PepeGoldTracker.currentRealm:OpenPanel()
         end
