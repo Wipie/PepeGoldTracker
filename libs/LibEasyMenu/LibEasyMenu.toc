@@ -1,0 +1,9 @@
+## Interface: 110000, 40400, 11503
+## Title: LibEasyMenu
+## Notes: Small library that bring back EasyMenu implementation
+## Author: Cynn @ Medivh-EU
+## Version: 1.0.0
+## LoadOnDemand: 0
+
+Libs\LibStub\LibStub.lua
+lib.xml
