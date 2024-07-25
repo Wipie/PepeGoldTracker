@@ -43,6 +43,7 @@ function PepeExportGuild:DrawExportGuildWindow()
     StdUi:MakeResizable(exportGuildWindow, "BOTTOMRIGHT")
     exportGuildWindow:SetResizeBounds(250, 332)
     exportGuildWindow:IsUserPlaced(true);
+    exportGuildWindow:IsMovable(true)
 
     local editBox = StdUi:MultiLineBox(exportGuildWindow, 280, 300, nil)
     editBox:SetAlpha(0.75)

@@ -13,73 +13,41 @@ function PepeCurrentGold:OnEnable()
 end
 
 function PepeCurrentGold:OpenPanel()
-    if (self.currentRealmWindow == nil) then
-        self:DrawCurrentRealmWindow()
+    if (self.currentGoldWindow == nil) then
+        self:DrawCurrentGoldWindow()
     else
-        self.currentRealmWindow:Show()
+        self.currentGoldWindow:Show()
     end
 end
 
 function PepeCurrentGold:Toggle()
-    if not self.currentRealmWindow then
+    if not self.currentGoldWindow then
         PepeCurrentGold:OpenPanel()
-    elseif self.currentRealmWindow:IsVisible() then
-        self.currentRealmWindow:Hide()
+    elseif self.currentGoldWindow:IsVisible() then
+        self.currentGoldWindow:Hide()
     else
-        self.currentRealmWindow:Show()
+        self.currentGoldWindow:Show()
     end
 end
 
-function PepeCurrentGold:DrawCurrentRealmWindow()
-    local currentRealmWindow
-    if (#GetAutoCompleteRealms() > 1) then
-        currentRealmWindow = StdUi:Window(UIParent, 400, 160, L["Current Realm:"])
-    else
-        currentRealmWindow = StdUi:Window(UIParent, 400, 100, L["Current Realm:"])
+function PepeCurrentGold:DrawCurrentGoldWindow()
+    local currentGoldWindow
+    local db = PepeGoldTracker.db.global.characters
+    local totalGold = 0;
+    for _, character in pairs(db) do
+        totalGold = totalGold + character.gold
     end
+    local formatGold = PepeGoldTracker:formatGold(totalGold, true)
+    currentGoldWindow = StdUi:Window(UIParent, 150, 30)
+    local goldText = StdUi:Label(currentGoldWindow, formatGold, 16)
+    StdUi:GlueTop(goldText, currentGoldWindow, 0, -40)
 
-    currentRealmWindow:SetPoint('CENTER', UIParent, 'CENTER', 0, 420)
-    currentRealmWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
+    currentGoldWindow:SetPoint('CENTER', UIParent, 'CENTER', 0, 420)
+    currentGoldWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
 
-    currentRealmWindow:SetResizeBounds(250, 332)
-    currentRealmWindow:IsUserPlaced(true);
+    currentGoldWindow:SetResizeBounds(250, 332)
+    currentGoldWindow:IsUserPlaced(false);
+    currentGoldWindow:IsMovable(false);
 
-
-    local logoFrame = StdUi:Frame(currentRealmWindow, 32, 32)
-    local logoTexture = StdUi:Texture(logoFrame, 32, 32, [=[Interface\Addons\PepeGoldTracker\media\PepeAlone.tga]=])
-    StdUi:GlueTop(logoTexture, logoFrame, 0, 0, "CENTER")
-    StdUi:GlueTop(logoFrame, currentRealmWindow, 10, -10, "LEFT")
-
-    local playerRealm = select(2, UnitFullName("player"))
-
-    local realmText = StdUi:Label(currentRealmWindow, playerRealm, 32)
-    StdUi:GlueTop(realmText, currentRealmWindow, 0, -40)
-
-    if (#GetAutoCompleteRealms() > 1) then
-        local connectedLabel = StdUi:FontString(currentRealmWindow, L["Connected realm:"])
-        StdUi:GlueBelow(connectedLabel, realmText, 0, -10)
-
-        local listOfConnectedRealm = ""
-        local connectedRealms = GetAutoCompleteRealms()
-        local filteredList = {}
-        for index, realm in pairs(connectedRealms) do
-            if (realm ~= playerRealm) then
-                table.insert(filteredList, realm)
-            end
-        end
-
-        for index, realm in pairs(filteredList) do
-            if (index > 1) then
-                listOfConnectedRealm = listOfConnectedRealm.."|cffd4af37".." | ".."|r"..realm
-            else
-                listOfConnectedRealm = listOfConnectedRealm..""..realm
-            end
-        end
-
-        local connectedRealmLabel = StdUi:Label(currentRealmWindow, listOfConnectedRealm, 18, nil, 375)
-        connectedRealmLabel:SetJustifyH('Middle')
-        StdUi:GlueBelow(connectedRealmLabel, connectedLabel, 0, -10)
-    end
-
-    self.currentRealmWindow = currentRealmWindow
+    self.currentGoldWindow = currentGoldWindow
 end

@@ -54,7 +54,6 @@ function PepeCharacterViewer:DrawWindow()
     else
         characterWindow:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
     end
-
     characterWindow:SetScript("OnSizeChanged", function(self)
         PepeCharacterViewer.configDB.characterWindowSize = { width = self:GetWidth(), height = self:GetHeight() }
     end)
@@ -67,6 +66,7 @@ function PepeCharacterViewer:DrawWindow()
 
     StdUi:MakeResizable(characterWindow, "BOTTOMRIGHT")
     StdUi:MakeResizable(characterWindow, "TOPLEFT")
+    characterWindow:IsMovable(true)
     characterWindow:SetResizeBounds(950, 250)
     characterWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
     characterWindow:SetScript("OnMouseDown", function(self)

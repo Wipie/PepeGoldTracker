@@ -36,6 +36,7 @@ end
 function PepeSync:DrawSyncRequestWindow()
     local syncToWindow = StdUi:Window(UIParent, 420, 170, L["Synchronization request"])
     syncToWindow:SetPoint('CENTER', UIParent, 'CENTER', 0, 0)
+    syncToWindow:IsMovable(true)
     syncToWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
     syncToWindow:SetScript("OnMouseDown", function(self)
         self:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
@@ -179,7 +180,7 @@ end
 function PepeSync:DrawSyncProgressWindow(min, max)
     local syncProgressWindow = StdUi:Window(UIParent, 350, 150, L['Synchronization']);
     syncProgressWindow:SetPoint('CENTER');
-
+    syncProgressWindow:IsMovable(true)
 
     local logoFrame = StdUi:Frame(syncProgressWindow, 32, 32)
     local logoTexture = StdUi:Texture(logoFrame, 32, 32, [=[Interface\Addons\PepeGoldTracker\media\PepeAlone.tga]=])

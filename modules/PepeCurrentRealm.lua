@@ -43,7 +43,7 @@ function PepeCurrentRealm:DrawCurrentRealmWindow()
 
     currentRealmWindow:SetResizeBounds(250, 332)
     currentRealmWindow:IsUserPlaced(true);
-
+    currentRealmWindow:IsMovable(true)
 
     local logoFrame = StdUi:Frame(currentRealmWindow, 32, 32)
     local logoTexture = StdUi:Texture(logoFrame, 32, 32, [=[Interface\Addons\PepeGoldTracker\media\PepeAlone.tga]=])
