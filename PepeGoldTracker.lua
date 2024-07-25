@@ -134,6 +134,11 @@ function PepeGoldTracker:MigrateOldDatabaseSchema()
         self.db.global.lockGoldWindow = { ["lock"] = false }
     end
 
+    if (not self.db.global.goldWindow) then
+        self.db.global.goldWindow = { ["height"] = 30 }
+        self.db.global.goldWindow = { ["width"] = 150 }
+    end
+
     if (not self.db.global.hideColumnCharacters) then
         self.db.global.hideColumnCharacters = {
             ["icon"] = false,
@@ -393,6 +398,36 @@ function PepeGoldTracker:SetupOptions()
                         get = function(info)
                             return not PepeGoldTracker.db.global.lockGoldWindow.lock
                         end
+                    },
+                    height = {
+                        order = 25,
+                        type = "range",
+                        name = "Height",
+                        min = 10,
+                        max = 100,
+                        step = 1,
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.goldWindow.height = val
+                            PepeGoldTracker.currentGold:UpdateWindow()
+                        end,
+                        get = function(info)
+                            return PepeGoldTracker.db.global.goldWindow.height
+                        end,
+                    },
+                    width = {
+                        order = 25,
+                        type = "range",
+                        name = "Width",
+                        min = 50,
+                        max = 500,
+                        step = 1,
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.goldWindow.width = val
+                            PepeGoldTracker.currentGold:UpdateWindow()
+                        end,
+                        get = function(info)
+                            return PepeGoldTracker.db.global.goldWindow.width
+                        end,
                     },
                 }
             },

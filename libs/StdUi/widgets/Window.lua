@@ -21,6 +21,7 @@ function StdUi:Window(parent, width, height, title, disableControl)
 			return frame;
 		end
 	end
+	
 	if (not disableControl) then
 		local closeBtn = self:Button(frame, 16, 16, 'X');
 		closeBtn.text:SetFontSize(12);
