@@ -59,7 +59,7 @@ if L then
     L["Guilds overview options"] = "Options de suivi des guildes"
     L["Select wich columns you want to hide"] = "Sélectionnez quelles colonnes vous souhaitez cacher"
     L["Characters overview options"] = "Options de suivi des personnages"
-    L["Gold Widget overview options"] = "Options du widget d'or"
+    L["Gold widget overview options"] = "Options du widget d'or"
     L["Synchronization icon"] = "Îcone de synchronisation"
     L["General overview table configuration"] = "Configuration générale des tables"
     L["This section allow to customize the tables from overviews panels"] = "Cette section vous permet de personnaliser les tables des panneaux de suivis."
