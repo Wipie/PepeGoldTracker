@@ -20,6 +20,13 @@ function PepeCurrentGold:OpenPanel()
     end
 end
 
+function PepeCurrentGold:UpdateWindow()
+    if (self.currentGoldWindow) then
+        self.currentGoldWindow:Hide()
+        PepeCurrentGold:DrawCurrentGoldWindow()
+    end
+end
+
 function PepeCurrentGold:Toggle()
     if not self.currentGoldWindow then
         PepeCurrentGold:OpenPanel()
@@ -42,12 +49,27 @@ function PepeCurrentGold:DrawCurrentGoldWindow()
     local goldText = StdUi:Label(currentGoldWindow, formatGold, 16)
     StdUi:GlueTop(goldText, currentGoldWindow, 0, -40)
 
-    currentGoldWindow:SetPoint('CENTER', UIParent, 'CENTER', 0, 420)
+    if (self.configDB.goldWindowPosition ~= nil) then
+        currentGoldWindow:SetPoint(self.configDB.goldWindowPosition.point or "CENTER",
+                self.configDB.goldWindowPosition.UIParent,
+                self.configDB.goldWindowPosition.relPoint or "CENTER",
+                self.configDB.goldWindowPosition.relX or 0,
+                self.configDB.goldWindowPosition.relY or 0)
+    else
+        currentGoldWindow:SetPoint('CENTER', UIParent, 'CENTER', 0, 420)
+    end
     currentGoldWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
 
     currentGoldWindow:SetResizeBounds(250, 332)
     currentGoldWindow:IsUserPlaced(false);
-    currentGoldWindow:IsMovable(false);
+    currentGoldWindow:IsMovable(PepeGoldTracker.db.global.lockGoldWindow.lock);
+
+
+    currentGoldWindow:SetScript('OnDragStop', function(self)
+        self:StopMovingOrSizing()
+        local point, _, relPoint, xOfs, yOfs = self:GetPoint()
+        PepeCurrentGold.configDB.goldWindowPosition = { point = point, relPoint = relPoint, relX = xOfs, relY = yOfs }
+    end)
 
     self.currentGoldWindow = currentGoldWindow
 end

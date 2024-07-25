@@ -386,7 +386,9 @@ function PepeGoldTracker:SetupOptions()
                         order = 4,
                         set = function(info, val)
                             PepeGoldTracker.db.global.lockGoldWindow.lock = not val
-                            -- Define new default position position
+                            -- Modifiy localization for options
+                            -- Add option to select the display
+                            -- Base gold format on the global display (Character, Realm, Account)
                             PepeGoldTracker.currentGold:UpdateWindow()
                         end,
                         get = function(info)
