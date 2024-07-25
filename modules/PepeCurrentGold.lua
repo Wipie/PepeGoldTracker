@@ -72,6 +72,14 @@ function PepeCurrentGold:DrawCurrentGoldWindow()
     end
     currentGoldWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
 
+    currentGoldWindow:SetScript('OnMouseDown', function(self, button)
+        if (button == "RightButton") then
+            MenuUtil.CreateContextMenu(self.menuFrame, function(ownerRegion, rootDescription)
+                rootDescription:CreateButton(L["Close this window"], function() PepeCurrentGold:Toggle() end)
+            end)
+        end
+    end);
+
     currentGoldWindow:SetResizeBounds(250, 332)
     currentGoldWindow:IsUserPlaced(false);
     currentGoldWindow:IsMovable(PepeGoldTracker.db.global.goldWindowOptions.lock);

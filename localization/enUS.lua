@@ -149,3 +149,9 @@ L["Enter the character you wish to sync with \n*Must be on the same realm/connec
 L["Synchronization request"] = true
 L["Pending request"] = true
 L['Synchronization'] = true
+
+
+--[[
+    Gold Widget Window
+]]
+L["Close this window"] = true

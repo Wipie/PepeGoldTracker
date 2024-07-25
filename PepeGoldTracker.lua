@@ -378,7 +378,7 @@ function PepeGoldTracker:SetupOptions()
             },
             goldWidget = {
                 type = "group",
-                name = L["Gold wiget overview options"],
+                name = L["Gold widget overview options"],
                 inline = true,
                 order = 5,
                 args = {

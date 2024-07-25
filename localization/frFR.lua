@@ -148,4 +148,10 @@ if L then
     L["Synchronization request"] = "Demande de synchronisation"
     L["Pending request"] = "Requête en attente"
     L['Synchronization'] = "Synchronisation"
+
+
+    --[[
+        Gold Widget Window
+    ]]
+    L["Close this window"] = true
 end
