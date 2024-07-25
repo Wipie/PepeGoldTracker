@@ -1,9 +1,9 @@
 PepeGoldTracker = LibStub("AceAddon-3.0"):NewAddon("PepeGoldTracker", "AceConsole-3.0", "AceEvent-3.0")
 _G["PepeGoldTracker"] = PepeGoldTracker
-local StdUi = LibStub('StdUi')
 local ldbi = LibStub("LibDBIcon-1.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("PepeGoldTracker")
 local ldbc
+local EasyMenuLib
 PepeGoldTracker.IsRetail = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_MAINLINE
 PepeGoldTracker.IsClassic = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_CLASSIC
 PepeGoldTracker.IsBC = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC
@@ -13,6 +13,7 @@ PepeGoldTracker.IsWrath = _G.WOW_PROJECT_ID == _G.WOW_PROJECT_WRATH_CLASSIC
 
 if (PepeGoldTracker.IsRetail) then
     ldbc = LibStub:GetLibrary("LibDBCompartment-1.0");
+    em = LibStub:GetLibrary("EasyMenuLib");
 end
 
 PepeGoldTracker.color = {
@@ -167,10 +168,11 @@ function PepeGoldTracker:DrawMinimapButton()
     local ldb = LibStub("LibDataBroker-1.1"):NewDataObject("PepeGoldTracker", {
         type = "launcher",
         icon = [=[Interface\Addons\PepeGoldTracker\media\PepeAlone.tga]=],
-        OnClick = function(self)
-            if (not self.menuFrame) then
+        OnClick = function(self, button)
+            local frame
+            if (not frame) then
                 local menuFrame = CreateFrame("Frame", "PepeMinimapFrame", UIParent, "UIDropDownMenuTemplate")
-                self.menuFrame = menuFrame
+                frame = menuFrame
             end
             local menu = {
                 { text = "Pepe Gold Tracker", notCheckable = true, isTitle = true },
@@ -184,14 +186,7 @@ function PepeGoldTracker:DrawMinimapButton()
                     PepeGoldTracker.currentRealm:Toggle()
                 end },
             }
-           -- EasyMenu(menu, self.menuFrame, "cursor", 0, 0, "MENU");
-          --  MenuUtil.RegisterButtonMenu(menu, self.menuFrame, "cursor", 0, 0, "MENU")
-            MenuUtil.CreateContextMenu(self.menuFrame, function(ownerRegion, rootDescription)
-                rootDescription:CreateTitle("Pepe Gold Tracker")
-                rootDescription:CreateButton(L["Toggle character window"], function() PepeGoldTracker.charactersViewer:Toggle() end)
-                rootDescription:CreateButton(L["Toggle guild window"], function() PepeGoldTracker.guildsViewer:Toggle() end)
-                rootDescription:CreateButton(L["Toggle realm window"], function() PepeGoldTracker.currentRealm:Toggle() end)
-            end)
+            em:EasyMenu(menu, frame, "cursor", 0, 0, "MENU");
         end,
     })
 
