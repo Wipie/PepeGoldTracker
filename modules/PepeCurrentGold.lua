@@ -47,7 +47,8 @@ function PepeCurrentGold:DrawCurrentGoldWindow()
     local formatGold = PepeGoldTracker:formatGold(totalGold, true)
     currentGoldWindow = StdUi:Window(UIParent, 150, 30)
     local goldText = StdUi:Label(currentGoldWindow, formatGold, 16)
-    StdUi:GlueTop(goldText, currentGoldWindow, 0, -40)
+    goldText:SetJustifyH('RIGHT');
+    StdUi:GlueAcross(goldText, currentGoldWindow, 0, 0)
 
     if (self.configDB.goldWindowPosition ~= nil) then
         currentGoldWindow:SetPoint(self.configDB.goldWindowPosition.point or "CENTER",
