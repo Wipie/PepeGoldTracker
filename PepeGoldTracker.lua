@@ -43,6 +43,8 @@ function SlashCmdList.pgt(command)
         PepeGoldTracker.syncModule:Toggle()
     elseif (command == 'realm') then
         PepeGoldTracker.currentRealm:Toggle()
+    elseif (command == 'gold') then
+        PepeGoldTracker.currentGold:Toggle()
     elseif (command == 'minimap') then
         PepeGoldTracker.db.global.minimap.hide = not PepeGoldTracker.db.global.minimap.hide
         ldbi:Refresh("PepeGoldTracker", PepeGoldTracker.db.global.minimap)
@@ -53,6 +55,7 @@ function SlashCmdList.pgt(command)
         print("   " .. PepeGoldTracker.color.orange .. " guild "..PepeGoldTracker.color.reset ..L["- open guild window"])
         print("   " .. PepeGoldTracker.color.orange .. " version "..PepeGoldTracker.color.reset ..L["- print the version number of the addon."])
         print("   " .. PepeGoldTracker.color.orange .. " realm "..PepeGoldTracker.color.reset ..L["- open a window showing what realm you are logged on."])
+        print("   " .. PepeGoldTracker.color.orange .. " gold "..PepeGoldTracker.color.reset ..L["- open a window showing what gold you have."])
         print("   " .. PepeGoldTracker.color.orange .. " options "..PepeGoldTracker.color.reset ..L["- open the options window."])
         print("   " .. PepeGoldTracker.color.orange .. " minimap "..PepeGoldTracker.color.reset ..L["- toggle visibility of minimap button"])
     end
@@ -116,6 +119,10 @@ function PepeGoldTracker:MigrateOldDatabaseSchema()
 
     if (not self.db.global.autoOpenCurrentRealm) then
         self.db.global.autoOpenCurrentRealm = { ["hide"] = false }
+    end
+
+    if (not self.db.global.autoOpenCurrentGold) then
+        self.db.global.autoOpenCurrentGold = { ["hide"] = false }
     end
 
     if (not self.db.global.moneyFormat) then
@@ -558,6 +565,9 @@ function PepeGoldTracker:OnEvent(event)
     if ((event == 'PLAYER_MONEY') or (event == 'PLAYER_ENTERING_WORLD')) then
         if ((event == 'PLAYER_ENTERING_WORLD') and (UnitLevel("player") < 11) and (not PepeGoldTracker.db.global.autoOpenCurrentRealm.hide)) then
             PepeGoldTracker.currentRealm:OpenPanel()
+        end
+        if ((event == 'PLAYER_ENTERING_WORLD') and (not PepeGoldTracker.db.global.autoOpenCurrentGold.hide)) then
+            PepeGoldTracker.currentGold:OpenPanel()
         end
         if (PepeGoldTracker:CheckIfCharExist()) then
             PepeGoldTracker:UpdateChar()
