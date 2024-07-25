@@ -67,6 +67,9 @@ if L then
     L["Lock frame"] = "Vérouiller la fenêtre"
     L["Data display source"] = "Source des données"
     L["Modify your gold widget to your liking."] = "Modifier l'apparence de votre widget"
+    L["Window options"] = "Option de la fenêtre"
+    L["Height"] = "Hauteur"
+    L["Width"] = "Largeur"
 
     -- Data Display
     L["Character"] = "Personnage"

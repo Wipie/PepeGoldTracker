@@ -65,6 +65,9 @@ L["Gold format display"] = true
 L["Lock frame"] = true
 L["Data display source"] = true
 L["Modify your gold widget to your liking."] = true
+L["Window options"] = true
+L["Height"] = true
+L["Width"] = true
 
 -- Data Display
 L["Character"] = true

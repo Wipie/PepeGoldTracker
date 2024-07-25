@@ -401,8 +401,6 @@ function PepeGoldTracker:SetupOptions()
                                 order = 4,
                                 set = function(info, val)
                                     PepeGoldTracker.db.global.goldWindowOptions.lock = not val
-                                    -- Modifiy localization for options
-                                    -- Add option to select the display
                                     -- Base gold format on the global display (Character, Realm, Account)
                                     PepeGoldTracker.currentGold:UpdateWindow()
                                 end,
@@ -413,7 +411,7 @@ function PepeGoldTracker:SetupOptions()
                             height = {
                                 order = 25,
                                 type = "range",
-                                name = "Height",
+                                name = L["Height"],
                                 min = 10,
                                 max = 100,
                                 step = 1,
@@ -428,7 +426,7 @@ function PepeGoldTracker:SetupOptions()
                             width = {
                                 order = 25,
                                 type = "range",
-                                name = "Width",
+                                name = L["Width"],
                                 min = 50,
                                 max = 500,
                                 step = 1,
