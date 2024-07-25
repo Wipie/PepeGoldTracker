@@ -70,7 +70,8 @@ if L then
     L["Window options"] = "Option de la fenêtre"
     L["Height"] = "Hauteur"
     L["Width"] = "Largeur"
-
+    L["Frame strata"] = "Strata de la fenêtre"
+    
     -- Data Display
     L["Character"] = "Personnage"
     L["Current realm"] = "Serveur actuel"

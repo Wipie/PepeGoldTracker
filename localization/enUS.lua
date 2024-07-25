@@ -68,6 +68,7 @@ L["Modify your gold widget to your liking."] = true
 L["Window options"] = true
 L["Height"] = true
 L["Width"] = true
+L["Frame strata"] = true
 
 -- Data Display
 L["Character"] = true

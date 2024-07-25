@@ -136,7 +136,8 @@ function PepeGoldTracker:MigrateOldDatabaseSchema()
             ["height"] = 30,
             ["width"] = 150,
             ["data"] = "account",
-            ["lock"] = false
+            ["lock"] = false,
+            ["strata"] = 'medium'
          }
     end
 
@@ -432,6 +433,31 @@ function PepeGoldTracker:SetupOptions()
                                 get = function(info)
                                     return PepeGoldTracker.db.global.goldWindowOptions.width
                                 end,
+                            },
+                            strata = {
+                                type = "select",
+                                name = L["Frame Strata"],
+                                style = "dropdown",
+                                order = 6,
+                                width = 0.8,
+                                values = {
+                                    parent = "PARENT",
+                                    background = "BACKGROUND",
+                                    low = "LOW",
+                                    medium = "MEDIUM",
+                                    high = "HIGH",
+                                    dialog = "DIALOG",
+                                    fullscreen = "FULLSCREEN",
+                                    fullscreen_dialog = "FULLSCREEN_DIALOG",
+                                    tooltip = "TOOLTIP"
+                                },
+                                set = function(info, val)
+                                    PepeGoldTracker.db.global.goldWindowOptions.strata = val
+                                    PepeGoldTracker.currentGold:UpdateWindow()
+                                end,
+                                get = function(info)
+                                    return PepeGoldTracker.db.global.goldWindowOptions.strata
+                                end
                             },
                         }
                     },
