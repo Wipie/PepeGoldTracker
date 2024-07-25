@@ -13,7 +13,14 @@ function StdUi:Window(parent, width, height, title)
 	local frame = self:PanelWithTitle(parent, width, height, title);
 	frame:SetClampedToScreen(true);
 	frame.titlePanel.isWidget = false;
-	self:MakeDraggable(frame); -- , frame.titlePanel
+
+	-- Make lockable
+	function frame:IsMovable(bool)
+		if (bool) then
+			StdUi:MakeDraggable(frame);
+			return frame;
+		end
+	end
 
 	local closeBtn = self:Button(frame, 16, 16, 'X');
 	closeBtn.text:SetFontSize(12);
