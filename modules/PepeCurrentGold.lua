@@ -45,7 +45,7 @@ function PepeCurrentGold:DrawCurrentGoldWindow()
         totalGold = totalGold + character.gold
     end
     local formatGold = PepeGoldTracker:formatGold(totalGold, true)
-    currentGoldWindow = StdUi:Window(UIParent, 150, 30)
+    currentGoldWindow = StdUi:Window(UIParent, 150, 30, nil, true)
     local goldText = StdUi:Label(currentGoldWindow, formatGold, 16)
     goldText:SetJustifyH('RIGHT');
     StdUi:GlueAcross(goldText, currentGoldWindow, 0, 0)

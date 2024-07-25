@@ -8,7 +8,7 @@ local module, version = 'Window', 6;
 if not StdUi:UpgradeNeeded(module, version) then return end;
 
 --- @return Frame
-function StdUi:Window(parent, width, height, title)
+function StdUi:Window(parent, width, height, title, disableControl)
 	parent = parent or UIParent;
 	local frame = self:PanelWithTitle(parent, width, height, title);
 	frame:SetClampedToScreen(true);
@@ -21,18 +21,18 @@ function StdUi:Window(parent, width, height, title)
 			return frame;
 		end
 	end
+	if ( not disableControl) then
+		local closeBtn = self:Button(frame, 16, 16, 'X');
+		closeBtn.text:SetFontSize(12);
+		closeBtn.isWidget = false;
+		self:GlueTop(closeBtn, frame, -10, -10, 'RIGHT');
 
-	local closeBtn = self:Button(frame, 16, 16, 'X');
-	closeBtn.text:SetFontSize(12);
-	closeBtn.isWidget = false;
-	self:GlueTop(closeBtn, frame, -10, -10, 'RIGHT');
+		closeBtn:SetScript('OnClick', function(self)
+			self:GetParent():Hide();
+		end);
 
-	closeBtn:SetScript('OnClick', function(self)
-		self:GetParent():Hide();
-	end);
-
-	frame.closeBtn = closeBtn;
-
+		frame.closeBtn = closeBtn;
+	end
 	function frame:SetWindowTitle(t)
 		self.titlePanel.label:SetText(t);
 	end
