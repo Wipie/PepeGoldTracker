@@ -41,11 +41,15 @@ function PepeCurrentGold:DrawCurrentGoldWindow()
     local currentGoldWindow
     local db = PepeGoldTracker.db.global.characters
     local totalGold = 0;
-    for _, character in pairs(db) do
-        totalGold = totalGold + character.gold
+    if (PepeGoldTracker.db.global.goldWindowOptions.data == "account") then
+        for _, character in pairs(db) do
+            totalGold = totalGold + character.gold
+        end
+    elseif (PepeGoldTracker.db.global.goldWindowOptions.data == "character") then
+        totalGold = GetMoney();
     end
     local formatGold = PepeGoldTracker:formatGold(totalGold, true)
-    currentGoldWindow = StdUi:Window(UIParent, PepeGoldTracker.db.global.goldWindow.width, PepeGoldTracker.db.global.goldWindow.height, nil, true)
+    currentGoldWindow = StdUi:Window(UIParent, PepeGoldTracker.db.global.goldWindowOptions.width, PepeGoldTracker.db.global.goldWindowOptions.height, nil, true)
     local goldText = StdUi:Label(currentGoldWindow, formatGold, 16)
     goldText:SetJustifyH('RIGHT');
     StdUi:GlueAcross(goldText, currentGoldWindow, 0, 0)
@@ -63,7 +67,7 @@ function PepeCurrentGold:DrawCurrentGoldWindow()
 
     currentGoldWindow:SetResizeBounds(250, 332)
     currentGoldWindow:IsUserPlaced(false);
-    currentGoldWindow:IsMovable(PepeGoldTracker.db.global.lockGoldWindow.lock);
+    currentGoldWindow:IsMovable(PepeGoldTracker.db.global.goldWindowOptions.lock);
 
 
     currentGoldWindow:SetScript('OnDragStop', function(self)

@@ -382,52 +382,65 @@ function PepeGoldTracker:SetupOptions()
                 inline = true,
                 order = 5,
                 args = {
-                    lockGoldWindow = {
-                        name = L["Lock gold window position"],
-                        descStyle = "inline",
-                        width = "full",
-                        type = "toggle",
-                        order = 4,
-                        set = function(info, val)
-                            PepeGoldTracker.db.global.goldWindowOptions.lock = not val
-                            -- Modifiy localization for options
-                            -- Add option to select the display
-                            -- Base gold format on the global display (Character, Realm, Account)
-                            PepeGoldTracker.currentGold:UpdateWindow()
-                        end,
-                        get = function(info)
-                            return not PepeGoldTracker.db.global.goldWindowOptions.lock
-                        end
-                    },
-                    height = {
-                        order = 25,
-                        type = "range",
-                        name = "Height",
-                        min = 10,
-                        max = 100,
-                        step = 1,
-                        set = function(info, val)
-                            PepeGoldTracker.db.global.goldWindowOptions.height = val
-                            PepeGoldTracker.currentGold:UpdateWindow()
-                        end,
-                        get = function(info)
-                            return PepeGoldTracker.db.global.goldWindowOptions.height
-                        end,
-                    },
-                    width = {
-                        order = 25,
-                        type = "range",
-                        name = "Width",
-                        min = 50,
-                        max = 500,
-                        step = 1,
-                        set = function(info, val)
-                            PepeGoldTracker.db.global.goldWindowOptions.width = val
-                            PepeGoldTracker.currentGold:UpdateWindow()
-                        end,
-                        get = function(info)
-                            return PepeGoldTracker.db.global.goldWindowOptions.width
-                        end,
+                    tableOptions = {
+                        type = "group",
+                        order = 5,
+                        name = L["Window options"],
+                        inline = true,
+                        args = {
+                            desc3 = {
+                                order = 1,
+                                type = "description",
+                                name = L["This section allow to customize the tables from overviews panels"],
+                            },
+                            lockGoldWindow = {
+                                name = L["Lock frame"],
+                                descStyle = "inline",
+                                width = "full",
+                                type = "toggle",
+                                order = 4,
+                                set = function(info, val)
+                                    PepeGoldTracker.db.global.goldWindowOptions.lock = not val
+                                    -- Modifiy localization for options
+                                    -- Add option to select the display
+                                    -- Base gold format on the global display (Character, Realm, Account)
+                                    PepeGoldTracker.currentGold:UpdateWindow()
+                                end,
+                                get = function(info)
+                                    return not PepeGoldTracker.db.global.goldWindowOptions.lock
+                                end
+                            },
+                            height = {
+                                order = 25,
+                                type = "range",
+                                name = "Height",
+                                min = 10,
+                                max = 100,
+                                step = 1,
+                                set = function(info, val)
+                                    PepeGoldTracker.db.global.goldWindowOptions.height = val
+                                    PepeGoldTracker.currentGold:UpdateWindow()
+                                end,
+                                get = function(info)
+                                    return PepeGoldTracker.db.global.goldWindowOptions.height
+                                end,
+                            },
+                            width = {
+                                order = 25,
+                                type = "range",
+                                name = "Width",
+                                min = 50,
+                                max = 500,
+                                step = 1,
+                                set = function(info, val)
+                                    PepeGoldTracker.db.global.goldWindowOptions.width = val
+                                    PepeGoldTracker.currentGold:UpdateWindow()
+                                end,
+                                get = function(info)
+                                    return PepeGoldTracker.db.global.goldWindowOptions.width
+                                end,
+                            },
+                        }
                     },
                     dataDisplay = {
                         type = "select",
@@ -441,11 +454,11 @@ function PepeGoldTracker:SetupOptions()
                             account = L["Account"],
                         },
                         set = function(info, val)
-                            PepeGoldTracker.db.global.moneyFormat = val
+                            PepeGoldTracker.db.global.goldWindowOptions.data = val
                             PepeGoldTracker.currentGold:UpdateWindow()
                         end,
                         get = function(info)
-                            return PepeGoldTracker.db.global.moneyFormat
+                            return PepeGoldTracker.db.global.goldWindowOptions.data
                         end
                     },
                 }
