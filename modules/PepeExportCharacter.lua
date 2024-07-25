@@ -43,6 +43,7 @@ function PepeExportCharacter:DrawExportCharWindow()
     StdUi:MakeResizable(exportCharWindow, "BOTTOMRIGHT")
     exportCharWindow:SetResizeBounds(250, 332)
     exportCharWindow:IsUserPlaced(true);
+    exportCharWindow:IsMovable(true)
 
     local editBox = StdUi:MultiLineBox(exportCharWindow, 280, 300, nil)
     editBox:SetAlpha(0.75)

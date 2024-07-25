@@ -43,6 +43,8 @@ function SlashCmdList.pgt(command)
         PepeGoldTracker.syncModule:Toggle()
     elseif (command == 'realm') then
         PepeGoldTracker.currentRealm:Toggle()
+    elseif (command == 'gold') then
+        PepeGoldTracker.currentGold:Toggle()
     elseif (command == 'minimap') then
         PepeGoldTracker.db.global.minimap.hide = not PepeGoldTracker.db.global.minimap.hide
         ldbi:Refresh("PepeGoldTracker", PepeGoldTracker.db.global.minimap)
@@ -53,6 +55,7 @@ function SlashCmdList.pgt(command)
         print("   " .. PepeGoldTracker.color.orange .. " guild "..PepeGoldTracker.color.reset ..L["- open guild window"])
         print("   " .. PepeGoldTracker.color.orange .. " version "..PepeGoldTracker.color.reset ..L["- print the version number of the addon."])
         print("   " .. PepeGoldTracker.color.orange .. " realm "..PepeGoldTracker.color.reset ..L["- open a window showing what realm you are logged on."])
+        print("   " .. PepeGoldTracker.color.orange .. " gold "..PepeGoldTracker.color.reset ..L["- open a window showing what gold you have."])
         print("   " .. PepeGoldTracker.color.orange .. " options "..PepeGoldTracker.color.reset ..L["- open the options window."])
         print("   " .. PepeGoldTracker.color.orange .. " minimap "..PepeGoldTracker.color.reset ..L["- toggle visibility of minimap button"])
     end
@@ -72,6 +75,7 @@ function PepeGoldTracker:OnInitialize()
     self.exportGuild = PepeGoldTracker:GetModule("PepeExportGuild")
     self.syncModule = PepeGoldTracker:GetModule("PepeSync")
     self.currentRealm = PepeGoldTracker:GetModule("PepeCurrentRealm")
+    self.currentGold = PepeGoldTracker:GetModule("PepeCurrentGold")
     for name, module in self:IterateModules() do
         module:SetEnabledState(true)
     end
@@ -118,8 +122,21 @@ function PepeGoldTracker:MigrateOldDatabaseSchema()
         self.db.global.autoOpenCurrentRealm = { ["hide"] = false }
     end
 
+    if (not self.db.global.autoOpenCurrentGold) then
+        self.db.global.autoOpenCurrentGold = { ["hide"] = true }
+    end
+
     if (not self.db.global.moneyFormat) then
         self.db.global.moneyFormat = "money"
+    end
+
+    if (not self.db.global.goldWindowOptions) then
+        self.db.global.goldWindowOptions = { 
+            ["height"] = 30,
+            ["width"] = 150,
+            ["data"] = "account",
+            ["lock"] = false
+         }
     end
 
     if (not self.db.global.hideColumnCharacters) then
@@ -247,6 +264,20 @@ function PepeGoldTracker:SetupOptions()
                             return not PepeGoldTracker.db.global.autoOpenCurrentRealm.hide
                         end
                     },
+                    turnOffCurrentGoldWindow = {
+                        name = L["Show current gold window"],
+                        desc = PepeGoldTracker.color.gray..L["Auto-open the current gold window."]..PepeGoldTracker.color.reset,
+                        descStyle = "inline",
+                        width = "full",
+                        type = "toggle",
+                        order = 4,
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.autoOpenCurrentGold.hide = not val
+                        end,
+                        get = function(info)
+                            return not PepeGoldTracker.db.global.autoOpenCurrentGold.hide
+                        end
+                    },
                     tableOptions = {
                         type = "group",
                         order = 5,
@@ -345,6 +376,91 @@ function PepeGoldTracker:SetupOptions()
                     },
                 }
             },
+            goldWidget = {
+                type = "group",
+                name = L["Gold wiget overview options"],
+                inline = true,
+                order = 5,
+                args = {
+                    tableOptions = {
+                        type = "group",
+                        order = 5,
+                        name = L["Window options"],
+                        inline = true,
+                        args = {
+                            desc3 = {
+                                order = 1,
+                                type = "description",
+                                name = L["Modify your gold widget to your liking."],
+                            },
+                            lockGoldWindow = {
+                                name = L["Lock frame"],
+                                descStyle = "inline",
+                                width = "full",
+                                type = "toggle",
+                                order = 4,
+                                set = function(info, val)
+                                    PepeGoldTracker.db.global.goldWindowOptions.lock = not val
+                                    -- Base gold format on the global display (Character, Realm, Account)
+                                    PepeGoldTracker.currentGold:UpdateWindow()
+                                end,
+                                get = function(info)
+                                    return not PepeGoldTracker.db.global.goldWindowOptions.lock
+                                end
+                            },
+                            height = {
+                                order = 25,
+                                type = "range",
+                                name = L["Height"],
+                                min = 10,
+                                max = 100,
+                                step = 1,
+                                set = function(info, val)
+                                    PepeGoldTracker.db.global.goldWindowOptions.height = val
+                                    PepeGoldTracker.currentGold:UpdateWindow()
+                                end,
+                                get = function(info)
+                                    return PepeGoldTracker.db.global.goldWindowOptions.height
+                                end,
+                            },
+                            width = {
+                                order = 25,
+                                type = "range",
+                                name = L["Width"],
+                                min = 50,
+                                max = 500,
+                                step = 1,
+                                set = function(info, val)
+                                    PepeGoldTracker.db.global.goldWindowOptions.width = val
+                                    PepeGoldTracker.currentGold:UpdateWindow()
+                                end,
+                                get = function(info)
+                                    return PepeGoldTracker.db.global.goldWindowOptions.width
+                                end,
+                            },
+                        }
+                    },
+                    dataDisplay = {
+                        type = "select",
+                        name = L["Data display source"],
+                        style = "dropdown",
+                        order = 6,
+                        width = 1.3,
+                        values = {
+                            character = L["Character"],
+                            realm = L["Current realm"],
+                            account = L["Account"],
+                        },
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.goldWindowOptions.data = val
+                            PepeGoldTracker.currentGold:UpdateWindow()
+                        end,
+                        get = function(info)
+                            return PepeGoldTracker.db.global.goldWindowOptions.data
+                        end
+                    },
+                }
+            },
             synchronization = {
                 type = "group",
                 name = L["Multi-account synching"],
@@ -375,6 +491,7 @@ function PepeGoldTracker:SetupOptions()
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", nil, nil, 'general')
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Characters Options"], "PepeGoldTracker", 'characters')
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Guilds Options"], "PepeGoldTracker", 'guilds')
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Gold Widget Options"], "PepeGoldTracker", 'goldWidget')
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Synchronization Options"], "PepeGoldTracker", 'synchronization')
 end
 
@@ -544,6 +661,9 @@ function PepeGoldTracker:OnEvent(event)
     if ((event == 'PLAYER_MONEY') or (event == 'PLAYER_ENTERING_WORLD')) then
         if ((event == 'PLAYER_ENTERING_WORLD') and (UnitLevel("player") < 11) and (not PepeGoldTracker.db.global.autoOpenCurrentRealm.hide)) then
             PepeGoldTracker.currentRealm:OpenPanel()
+        end
+        if ((event == 'PLAYER_ENTERING_WORLD') and (not PepeGoldTracker.db.global.autoOpenCurrentGold.hide)) then
+            PepeGoldTracker.currentGold:OpenPanel()
         end
         if (PepeGoldTracker:CheckIfCharExist()) then
             PepeGoldTracker:UpdateChar()

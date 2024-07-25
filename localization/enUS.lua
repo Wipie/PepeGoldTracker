@@ -7,6 +7,7 @@ L["- open character window"] = true
 L["- open guild window"] = true
 L["- print the version number of the addon."] = true
 L["- open a window showing what realm you are logged on."] = true
+L["- open a window showing what gold you have."] = true
 L["- toggle visibility of minimap button"] = true
 L["The current PepeGoldTracker version is: %s"] = true
 L["- open the options window."] = true
@@ -43,20 +44,36 @@ L["Version: "] = true
 L["Show minimap icon"] = true
 L["Whether or not to show the minimap icon."]  = true
 L["Show current realm window"] = true
+L["Show current gold window"] = true
 L["Auto-open the current realm window for character that are level 10 and under"] = true
+L["Auto-open the current gold window."] = true
 L["Multi-account synching"] = true
 L["Synchronization Options"] = true
 L["Note: this feature is still experimental and will only sync characters and not guild."] = true
 L["Open sync window"] = true
 L["Guilds Options"] = true
 L["Characters Options"] = true
+L["Gold Widget Options"] = true
 L["Guilds overview options"] = true
 L["Select wich columns you want to hide"]  = true
 L["Characters overview options"] = true
+L["Gold widget overview options"] = true
 L["Synchronization icon"] = true
 L["General overview table configuration"] = true
 L["This section allow to customize the tables from overviews panels"] = true
 L["Gold format display"] = true
+L["Lock frame"] = true
+L["Data display source"] = true
+L["Modify your gold widget to your liking."] = true
+L["Window options"] = true
+L["Height"] = true
+L["Width"] = true
+
+-- Data Display
+L["Character"] = true
+L["Current realm"] = true
+L["Account"] = true
+
 -- Gold format
 L["Blizzard"] = true
 L["Blizzard short (Only show gold)"] = true
