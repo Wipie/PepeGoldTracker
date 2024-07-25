@@ -43,6 +43,7 @@ L["Version: "] = true
 L["Show minimap icon"] = true
 L["Whether or not to show the minimap icon."]  = true
 L["Show current realm window"] = true
+L["Show current gold window"] = true
 L["Auto-open the current realm window for character that are level 10 and under"] = true
 L["Multi-account synching"] = true
 L["Synchronization Options"] = true

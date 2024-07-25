@@ -45,6 +45,7 @@ if L then
     L["Show minimap icon"] = "Affiche l'icon de minimap"
     L["Whether or not to show the minimap icon."] = "Si vous souhaitez affiché l'icone de minimap"
     L["Show current realm window"] = "Affiche la fenêtre du serveur actuel"
+    L["Show current gold window"] = "Affiche la quantité d'or actuel"
     L["Auto-open the current realm window for character that are level 10 and under"] = "Ouvre automatiquement la fenêtre du serveur actuel pour les personnages de niveau 10 ou moins"
     L["Multi-account synching"] = "Synchronization multi-comptes"
     L["Synchronization Options"] = "Options de synchronization"

@@ -247,6 +247,20 @@ function PepeGoldTracker:SetupOptions()
                             return not PepeGoldTracker.db.global.autoOpenCurrentRealm.hide
                         end
                     },
+                    turnOffCurrentGoldWindow = {
+                        name = L["Show current gold window"],
+                        desc = PepeGoldTracker.color.gray..L["Auto-open the current gold window."]..PepeGoldTracker.color.reset,
+                        descStyle = "inline",
+                        width = "full",
+                        type = "toggle",
+                        order = 4,
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.autoOpenCurrentGold.hide = not val
+                        end,
+                        get = function(info)
+                            return not PepeGoldTracker.db.global.autoOpenCurrentGold.hide
+                        end
+                    },
                     tableOptions = {
                         type = "group",
                         order = 5,

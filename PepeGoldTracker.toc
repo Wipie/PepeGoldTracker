@@ -38,4 +38,5 @@ modules\PepeExportCharacter.lua
 modules\PepeGuildViewer.lua
 modules\PepeExportGuild.lua
 modules\PepeCurrentRealm.lua
+modules\PepeCurrentGold.lua
 modules\PepeSync.lua
