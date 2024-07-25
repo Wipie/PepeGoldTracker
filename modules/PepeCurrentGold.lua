@@ -45,6 +45,13 @@ function PepeCurrentGold:DrawCurrentGoldWindow()
         for _, character in pairs(db) do
             totalGold = totalGold + character.gold
         end
+    elseif (PepeGoldTracker.db.global.goldWindowOptions.data == "realm") then
+        local name, realm = UnitFullName("player")
+        for _, character in pairs(db) do
+            if (character.realm == realm) then
+                totalGold = totalGold + character.gold 
+            end
+        end
     elseif (PepeGoldTracker.db.global.goldWindowOptions.data == "character") then
         totalGold = GetMoney();
     end

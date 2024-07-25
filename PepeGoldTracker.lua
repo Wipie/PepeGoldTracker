@@ -391,7 +391,7 @@ function PepeGoldTracker:SetupOptions()
                             desc3 = {
                                 order = 1,
                                 type = "description",
-                                name = L["This section allow to customize the tables from overviews panels"],
+                                name = L["Modify your gold widget to your liking."],
                             },
                             lockGoldWindow = {
                                 name = L["Lock frame"],
