@@ -64,8 +64,9 @@ if L then
     L["General overview table configuration"] = "Configuration générale des tables"
     L["This section allow to customize the tables from overviews panels"] = "Cette section vous permet de personnaliser les tables des panneaux de suivis."
     L["Gold format display"] = "Format d'affichage de l'or"
-    L["Lock gold window position"] = "Vérouiller la position de la fenêtre d'or actuel"
+    L["Lock frame"] = "Vérouiller la fenêtre"
     L["Data display source"] = "Source des données"
+    L["Modify your gold widget to your liking."] = "Modifier l'apparence de votre widget"
 
     -- Data Display
     L["Character"] = "Personnage"

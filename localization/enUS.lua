@@ -62,8 +62,9 @@ L["Synchronization icon"] = true
 L["General overview table configuration"] = true
 L["This section allow to customize the tables from overviews panels"] = true
 L["Gold format display"] = true
-L["Lock gold window position"] = true
+L["Lock frame"] = true
 L["Data display source"] = true
+L["Modify your gold widget to your liking."] = true
 
 -- Data Display
 L["Character"] = true
