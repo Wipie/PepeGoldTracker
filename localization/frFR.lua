@@ -71,7 +71,9 @@ if L then
     L["Height"] = "Hauteur"
     L["Width"] = "Largeur"
     L["Frame strata"] = "Strata de la fenêtre"
-    
+    L["Background opacity"] = "Opacité du fond"
+    L["Border opacity"] = "Opacité de la bordure"
+
     -- Data Display
     L["Character"] = "Personnage"
     L["Current realm"] = "Serveur actuel"

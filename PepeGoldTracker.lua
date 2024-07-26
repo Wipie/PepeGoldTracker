@@ -137,7 +137,9 @@ function PepeGoldTracker:MigrateOldDatabaseSchema()
             ["width"] = 150,
             ["data"] = "account",
             ["lock"] = false,
-            ["strata"] = 'medium'
+            ["strata"] = 'medium',
+            ["backgroundAlpha"] = 0.8,
+            ["borderAlpha"] = 1
          }
     end
 
@@ -344,39 +346,11 @@ function PepeGoldTracker:SetupOptions()
                     },
                 }
             },
-            guilds = {
-                type = "group",
-                name = L["Guilds overview options"],
-                inline = true,
-                order = 5,
-                args = {
-                    hideColumnGuilds = {
-                        type = "multiselect",
-                        name = L["Select wich columns you want to hide"],
-                        order = 7,
-                        width = 1.3,
-                        values = {
-                            guild = L["Guild name"],
-                            faction = L["Faction"],
-                            gold = L["Gold"],
-                            realm = L["Realm"],
-                            update = L["Last update"],
-                        },
-                        set = function(info, val)
-                            PepeGoldTracker.db.global.hideColumnGuilds[val] = not PepeGoldTracker.db.global.hideColumnGuilds[val]
-                            PepeGoldTracker.guildsViewer:UpdateSearchTable()
-                        end,
-                        get = function(info, val)
-                            return PepeGoldTracker.db.global.hideColumnGuilds[val]
-                        end
-                    },
-                }
-            },
             goldWidget = {
                 type = "group",
                 name = L["Gold widget overview options"],
                 inline = true,
-                order = 5,
+                order = 2,
                 args = {
                     tableOptions = {
                         type = "group",
@@ -402,6 +376,31 @@ function PepeGoldTracker:SetupOptions()
                                 end,
                                 get = function(info)
                                     return not PepeGoldTracker.db.global.goldWindowOptions.lock
+                                end
+                            },
+                            strata = {
+                                type = "select",
+                                name = L["Frame strata"],
+                                style = "dropdown",
+                                order = 6,
+                                width = 0.8,
+                                values = {
+                                    parent = "PARENT",
+                                    background = "BACKGROUND",
+                                    low = "LOW",
+                                    medium = "MEDIUM",
+                                    high = "HIGH",
+                                    dialog = "DIALOG",
+                                    fullscreen = "FULLSCREEN",
+                                    fullscreen_dialog = "FULLSCREEN_DIALOG",
+                                    tooltip = "TOOLTIP"
+                                },
+                                set = function(info, val)
+                                    PepeGoldTracker.db.global.goldWindowOptions.strata = val
+                                    PepeGoldTracker.currentGold:UpdateWindow()
+                                end,
+                                get = function(info)
+                                    return PepeGoldTracker.db.global.goldWindowOptions.strata
                                 end
                             },
                             height = {
@@ -434,30 +433,35 @@ function PepeGoldTracker:SetupOptions()
                                     return PepeGoldTracker.db.global.goldWindowOptions.width
                                 end,
                             },
-                            strata = {
-                                type = "select",
-                                name = L["Frame strata"],
-                                style = "dropdown",
-                                order = 6,
-                                width = 0.8,
-                                values = {
-                                    parent = "PARENT",
-                                    background = "BACKGROUND",
-                                    low = "LOW",
-                                    medium = "MEDIUM",
-                                    high = "HIGH",
-                                    dialog = "DIALOG",
-                                    fullscreen = "FULLSCREEN",
-                                    fullscreen_dialog = "FULLSCREEN_DIALOG",
-                                    tooltip = "TOOLTIP"
-                                },
+                            opacityBackdrop = {
+                                order = 40,
+                                type = "range",
+                                name = L["Background opacity"],
+                                min = 0,
+                                max = 1,
+                                step = 0.1,
                                 set = function(info, val)
-                                    PepeGoldTracker.db.global.goldWindowOptions.strata = val
+                                    PepeGoldTracker.db.global.goldWindowOptions.backgroundAlpha = val
                                     PepeGoldTracker.currentGold:UpdateWindow()
                                 end,
                                 get = function(info)
-                                    return PepeGoldTracker.db.global.goldWindowOptions.strata
-                                end
+                                    return PepeGoldTracker.db.global.goldWindowOptions.backgroundAlpha
+                                end,
+                            },
+                            opacityBorder = {
+                                order = 40,
+                                type = "range",
+                                name = L["Border opacity"],
+                                min = 0,
+                                max = 1,
+                                step = 0.1,
+                                set = function(info, val)
+                                    PepeGoldTracker.db.global.goldWindowOptions.borderAlpha = val
+                                    PepeGoldTracker.currentGold:UpdateWindow()
+                                end,
+                                get = function(info)
+                                    return PepeGoldTracker.db.global.goldWindowOptions.borderAlpha
+                                end,
                             },
                         }
                     },
@@ -478,6 +482,34 @@ function PepeGoldTracker:SetupOptions()
                         end,
                         get = function(info)
                             return PepeGoldTracker.db.global.goldWindowOptions.data
+                        end
+                    },
+                }
+            },
+            guilds = {
+                type = "group",
+                name = L["Guilds overview options"],
+                inline = true,
+                order = 3,
+                args = {
+                    hideColumnGuilds = {
+                        type = "multiselect",
+                        name = L["Select wich columns you want to hide"],
+                        order = 7,
+                        width = 1.3,
+                        values = {
+                            guild = L["Guild name"],
+                            faction = L["Faction"],
+                            gold = L["Gold"],
+                            realm = L["Realm"],
+                            update = L["Last update"],
+                        },
+                        set = function(info, val)
+                            PepeGoldTracker.db.global.hideColumnGuilds[val] = not PepeGoldTracker.db.global.hideColumnGuilds[val]
+                            PepeGoldTracker.guildsViewer:UpdateSearchTable()
+                        end,
+                        get = function(info, val)
+                            return PepeGoldTracker.db.global.hideColumnGuilds[val]
                         end
                     },
                 }

@@ -69,6 +69,8 @@ L["Window options"] = true
 L["Height"] = true
 L["Width"] = true
 L["Frame strata"] = true
+L["Background opacity"] = true
+L["Border opacity"] = true
 
 -- Data Display
 L["Character"] = true

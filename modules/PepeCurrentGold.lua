@@ -73,7 +73,8 @@ function PepeCurrentGold:DrawCurrentGoldWindow()
 
     currentGoldWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
     currentGoldWindow:SetFrameStrata(PepeGoldTracker.db.global.goldWindowOptions.strata)
-
+    currentGoldWindow:SetBackdropBorderColor(0, 0, 0, PepeGoldTracker.db.global.goldWindowOptions.borderAlpha)
+    currentGoldWindow:SetBackdropColor(0.0588, 0.0588, 0, PepeGoldTracker.db.global.goldWindowOptions.backgroundAlpha)
     currentGoldWindow:SetScript('OnMouseDown', function(self, button)
         if (button == "RightButton") then
             MenuUtil.CreateContextMenu(self.menuFrame, function(ownerRegion, rootDescription)
