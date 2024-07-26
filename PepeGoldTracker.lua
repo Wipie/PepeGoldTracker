@@ -1,5 +1,6 @@
 PepeGoldTracker = LibStub("AceAddon-3.0"):NewAddon("PepeGoldTracker", "AceConsole-3.0", "AceEvent-3.0")
 _G["PepeGoldTracker"] = PepeGoldTracker
+local addonName, addon = ...
 local ldbi = LibStub("LibDBIcon-1.0")
 local L = LibStub("AceLocale-3.0"):GetLocale("PepeGoldTracker")
 local ldbc
@@ -28,9 +29,7 @@ PepeGoldTracker.FRAME_LEVEL = 0
 PepeGoldTracker.character = {}
 PepeGoldTracker.Sync = {}
 
-SLASH_pgt1 = "/pepe"
-SLASH_pgt2 = "/pepegoldtracker"
-function SlashCmdList.pgt(command)
+function PepeGoldTracker:SlashCommand(command)
     command = string.lower(command)
     if (command == 'char') then
         PepeGoldTracker.charactersViewer:OpenPanel()
@@ -39,7 +38,7 @@ function SlashCmdList.pgt(command)
     elseif (command == 'version') then
         PepeGoldTracker:Print(PepeGoldTracker.colorString ..L["The current PepeGoldTracker version is: %s"]:format(C_AddOns.GetAddOnMetadata("PepeGoldTracker", "Version")))
     elseif (command == 'options') then
-        --Settings.OpenToCategory(Settings.GetCategory("PepeGoldTracker"))
+        Settings.OpenToCategory(self.optionsFrame.name)
     elseif (command == 'sync') then
         PepeGoldTracker.syncModule:Toggle()
     elseif (command == 'realm') then
@@ -67,7 +66,8 @@ function PepeGoldTracker:OnInitialize()
 
     PepeGoldTracker:MigrateOldDatabaseSchema()
     PepeGoldTracker:DrawMinimapButton()
-
+    self:RegisterChatCommand("pepe", "SlashCommand")
+    self:RegisterChatCommand("pepegoldtracker", "SlashCommand")
     -- Register modules
     self.charactersViewer = PepeGoldTracker:GetModule("PepeCharacterViewer")
     self.exportCharacter = PepeGoldTracker:GetModule("PepeExportCharacter")
@@ -436,7 +436,7 @@ function PepeGoldTracker:SetupOptions()
                             },
                             strata = {
                                 type = "select",
-                                name = L["Frame Strata"],
+                                name = L["Frame strata"],
                                 style = "dropdown",
                                 order = 6,
                                 width = 0.8,
@@ -509,7 +509,7 @@ function PepeGoldTracker:SetupOptions()
     }
 
     LibStub("AceConfig-3.0"):RegisterOptionsTable("PepeGoldTracker", self.options)
-    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", nil, nil, 'general')
+    self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", nil, nil, 'general')
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Characters Options"], "PepeGoldTracker", 'characters')
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Guilds Options"], "PepeGoldTracker", 'guilds')
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("PepeGoldTracker", L["Gold Widget Options"], "PepeGoldTracker", 'goldWidget')
@@ -680,7 +680,6 @@ end
 
 function PepeGoldTracker:OnEvent(event)
     if ((event == 'PLAYER_MONEY') or (event == 'PLAYER_ENTERING_WORLD')) then
-        PepeGoldTracker.currentGold:UpdateWindow()
         if ((event == 'PLAYER_ENTERING_WORLD') and (UnitLevel("player") < 11) and (not PepeGoldTracker.db.global.autoOpenCurrentRealm.hide)) then
             PepeGoldTracker.currentRealm:OpenPanel()
         end
@@ -692,6 +691,7 @@ function PepeGoldTracker:OnEvent(event)
         else
             PepeGoldTracker:RegisterChar()
         end
+        PepeGoldTracker.currentGold:UpdateWindow()
     elseif (self.IsWrath and ((event == 'GUILDBANKFRAME_OPENED') or (event == 'GUILDBANKFRAME_CLOSED'))) then
         if (PepeGoldTracker:CheckIfGuildExist()) then 
             PepeGoldTracker:UpdateGuild()

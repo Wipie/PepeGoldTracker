@@ -72,7 +72,6 @@ function PepeCurrentGold:DrawCurrentGoldWindow()
     end
 
     currentGoldWindow:SetFrameLevel(PepeGoldTracker:GetNextFrameLevel())
-    print(PepeGoldTracker.db.global.goldWindowOptions.strata)
     currentGoldWindow:SetFrameStrata(PepeGoldTracker.db.global.goldWindowOptions.strata)
 
     currentGoldWindow:SetScript('OnMouseDown', function(self, button)
