@@ -77,7 +77,7 @@ function PepeCurrentRealm:DrawCurrentRealmWindow()
         end
 
         local connectedRealmLabel = StdUi:Label(currentRealmWindow, listOfConnectedRealm, 18, nil, 375)
-        connectedRealmLabel:SetJustifyH('Middle')
+        connectedRealmLabel:SetJustifyH('CENTER')
         StdUi:GlueBelow(connectedRealmLabel, connectedLabel, 0, -10)
     end
 
