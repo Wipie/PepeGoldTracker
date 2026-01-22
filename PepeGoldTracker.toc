@@ -1,11 +1,11 @@
-## Interface: 1100000, 40400, 30403
+## Interface: 120000, 40400, 30403
 ## Title: PepeGoldTracker
 ## IconTexture: Interface\Addons\PepeGoldTracker\media\PepeAlone
 ## Notes: Addon that help tracking gold stored accross your account
 ## Notes-frFR: Un addon utilitaire vous permettant de suivre facilement l'or présent sur votre compte
 ## Author: Cynn @ Medivh-EU
 ## X-Curse-Project-ID: 701500
-## Version: 1.5.3
+## Version: 1.5.4
 ## OptionalDeps: Ace3, LibRealmInfo, LibDBIcon, LibDataBroker-1.1
 ## SavedVariables: PepeGoldTrackerDB
 
@@ -40,4 +40,5 @@ modules\PepeGuildViewer.lua
 modules\PepeExportGuild.lua
 modules\PepeCurrentRealm.lua
 modules\PepeCurrentGold.lua
+
 modules\PepeSync.lua
