@@ -5,7 +5,7 @@
 ## Notes-frFR: Un addon utilitaire vous permettant de suivre facilement l'or présent sur votre compte
 ## Author: Cynn @ Medivh-EU
 ## X-Curse-Project-ID: 701500
-## Version: 1.5.4
+## Version: 1.5.5
 ## OptionalDeps: Ace3, LibRealmInfo, LibDBIcon, LibDataBroker-1.1
 ## SavedVariables: PepeGoldTrackerDB
 
@@ -42,3 +42,4 @@ modules\PepeCurrentRealm.lua
 modules\PepeCurrentGold.lua
 
 modules\PepeSync.lua
+
