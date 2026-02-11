@@ -1,4 +1,4 @@
-## Interface: 120000, 40400, 30403
+## Interface: 120001, 40400, 30403
 ## Title: PepeGoldTracker
 ## IconTexture: Interface\Addons\PepeGoldTracker\media\PepeAlone
 ## Notes: Addon that help tracking gold stored accross your account
@@ -42,4 +42,5 @@ modules\PepeCurrentRealm.lua
 modules\PepeCurrentGold.lua
 
 modules\PepeSync.lua
+
 
